@@ -15,10 +15,12 @@ export interface IProduct {
   views: ViewVariant[];
   variants: ProductVariant[];
 }
+
 export type ProductVariant = {
+  id: string;
+  productId: string;
   color: ColorVariant;
   size: SizeVariant;
   price: number;
   quantity: number;
-  image?: string;
 };
