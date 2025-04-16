@@ -1,0 +1,98 @@
+'use client';
+
+import * as React from 'react';
+import {
+  IconBuildingStore,
+  IconCamera,
+  IconChartBar,
+  IconDashboard,
+  IconFileAi,
+  IconFileDescription,
+  IconFolder,
+  IconHelp,
+  IconInnerShadowTop,
+  IconListDetails,
+  IconSearch,
+  IconSettings,
+  IconUsers,
+} from '@tabler/icons-react';
+
+import { NavMain } from '@/components/nav-main';
+import { NavSecondary } from '@/components/nav-secondary';
+import { NavUser } from '@/components/nav-user';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from '@/components/ui/sidebar';
+
+const data = {
+  user: {
+    name: 'Salman M.',
+    email: 'salmanmoh.eth@gmail.com',
+    avatar:
+      'https://media.licdn.com/dms/image/v2/D4E03AQHTvbtxTz1YPg/profile-displayphoto-shrink_800_800/B4EZYgyHNWHYAg-/0/1744306730569?e=1750291200&v=beta&t=g_JHHiI5jFGIkGUJ-g1VuMnUGDHVObMxyMTNGfB8uVY',
+  },
+  navMain: [
+    {
+      title: 'Dashboard',
+      url: '/',
+      icon: IconDashboard,
+    },
+    {
+      title: 'Store',
+      url: '/store',
+      icon: IconBuildingStore,
+    },
+  ],
+  navSecondary: [
+    {
+      title: 'Settings',
+      url: '#',
+      icon: IconSettings,
+    },
+    {
+      title: 'Get Help',
+      url: '#',
+      icon: IconHelp,
+    },
+    {
+      title: 'Search',
+      url: '#',
+      icon: IconSearch,
+    },
+  ],
+};
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  return (
+    <Sidebar collapsible='offcanvas' {...props}>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              className='data-[slot=sidebar-menu-button]:!p-1.5'
+            >
+              <a href='#'>
+                <IconInnerShadowTop className='!size-5' />
+                <span className='text-base font-semibold'>Ulearna Store</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+      <SidebarContent>
+        <NavMain items={data.navMain} />
+        {/* <NavSecondary items={data.navSecondary} className='mt-auto' /> */}
+      </SidebarContent>
+      <SidebarFooter>
+        <NavUser user={data.user} />
+      </SidebarFooter>
+    </Sidebar>
+  );
+}
