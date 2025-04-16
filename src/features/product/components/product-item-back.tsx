@@ -1,24 +1,19 @@
-'use client';
-
 import React from 'react';
 import { IProduct } from '../interface/interface.product';
 import { FlipCardBack } from '@/components/ui/flip-card';
-import { Button } from '@/components/ui/button';
-import { useDefaultImageColor } from '../hooks/use-image';
 import { MiniSizeToggle } from './mini-size-toggle';
-import Link from 'next/link';
+import MiniAddToCartButton from './mini-add-to-cart';
 
 type productItemProps = {
   product: IProduct;
 };
 
 const ProductItemBack: React.FC<productItemProps> = ({ product }) => {
-  const imageColor = useDefaultImageColor();
   return (
     <FlipCardBack
       className='rounded-3xl bg-cover bg-center bg-no-repeat shadow-xs overflow-hidden'
       style={{
-        backgroundImage: `url(/assets/products/${product?.category}/${imageColor}.png)`,
+        backgroundImage: `url(/assets/products/${product?.category}/gray/front.png)`,
       }}
     >
       <div className='w-full h-full flex flex-col items-center justify-center bg-gradient-to-t from-secondary from-5% to-transparent to-95%'>
@@ -29,9 +24,7 @@ const ProductItemBack: React.FC<productItemProps> = ({ product }) => {
           <div className='mb-3'>
             <h4>$ {product?.defaultVariant.price}</h4>
           </div>
-          <Button className='rounded-full' onClick={(e) => e.preventDefault()}>
-            Add to cart
-          </Button>
+          <MiniAddToCartButton product={product} />
         </div>
       </div>
     </FlipCardBack>

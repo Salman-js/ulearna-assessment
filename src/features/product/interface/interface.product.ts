@@ -2,6 +2,7 @@ import {
   Category,
   ColorVariant,
   SizeVariant,
+  ViewVariant,
 } from '@/interface/interface.global';
 
 export interface IProduct {
@@ -11,6 +12,7 @@ export interface IProduct {
   longDescription?: string;
   category: Category;
   defaultVariant: ProductVariant;
+  views: ViewVariant[];
   variants: ProductVariant[];
 }
 export type ProductVariant = {
