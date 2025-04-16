@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import HeaderTitle from './header-title';
+import ThemeSwitcher from './theme-switcher';
 
 export function SiteHeader() {
   return (
@@ -14,6 +15,7 @@ export function SiteHeader() {
         />
         <HeaderTitle />
         <div className='ml-auto flex items-center gap-2'>
+          <ThemeSwitcher />
           <Button variant='ghost' asChild size='sm' className='hidden sm:flex'>
             <a
               href='https://github.com/Salman-js/ulearna-assessment'

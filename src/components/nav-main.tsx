@@ -11,6 +11,7 @@ import {
   SidebarSeparator,
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export function NavMain({
   items,
@@ -21,6 +22,7 @@ export function NavMain({
     icon?: Icon;
   }[];
 }) {
+  const pathname = usePathname();
   return (
     <SidebarGroup>
       <SidebarGroupContent className='flex flex-col gap-2'>
@@ -29,7 +31,7 @@ export function NavMain({
           <SidebarMenuItem className='flex items-center gap-2'>
             <SidebarMenuButton
               tooltip='New Product'
-              className='bg-accent rounded-lg'
+              className='rounded-md shadow-md p-3'
             >
               <IconPlus stroke={2} />
               <span className='font-semibold'>New Product</span>
@@ -41,7 +43,14 @@ export function NavMain({
           {items.map((item) => (
             <Link href={item.url} key={item.title}>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip={item.title}>
+                <SidebarMenuButton
+                  tooltip={item.title}
+                  isActive={
+                    pathname === '/'
+                      ? item.url === '/'
+                      : item.url !== '/' && pathname.includes(item.url)
+                  }
+                >
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                 </SidebarMenuButton>
