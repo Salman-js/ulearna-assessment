@@ -4,7 +4,7 @@ import { IProduct } from '@/features/product/interface/interface.product';
 import ProductsGrid from '@/features/product/components/products-grid';
 import { ProductBreadCrumbs } from '@/features/product/components/product-breadcrumbs';
 
-export default function Page() {
+export default async function Page() {
   const initialData: IProduct[] = data as any;
   return (
     <div className='@container/main flex flex-col flex-1 p-6 gap-6'>

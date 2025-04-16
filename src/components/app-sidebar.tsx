@@ -34,8 +34,7 @@ const data = {
   user: {
     name: 'Salman M.',
     email: 'salmanmoh.eth@gmail.com',
-    avatar:
-      'https://media.licdn.com/dms/image/v2/D4E03AQHTvbtxTz1YPg/profile-displayphoto-shrink_800_800/B4EZYgyHNWHYAg-/0/1744306730569?e=1750291200&v=beta&t=g_JHHiI5jFGIkGUJ-g1VuMnUGDHVObMxyMTNGfB8uVY',
+    avatar: 'nopicture',
   },
   navMain: [
     {
