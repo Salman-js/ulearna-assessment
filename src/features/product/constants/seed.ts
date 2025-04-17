@@ -3,6 +3,7 @@
 import { PrismaClient, Prisma, OrderStatus } from '@prisma/client';
 import { productsSeedData } from './data';
 import dayjs from 'dayjs';
+import { getRandomNumber } from '@/lib/utils';
 
 const prisma = new PrismaClient();
 
@@ -74,7 +75,12 @@ export async function seed() {
               create: [
                 {
                   productId: variant.id,
-                  quantity: Math.floor(Math.random() * 10) + 1,
+                  quantity:
+                    status === 'Pending'
+                      ? getRandomNumber(1, 4)
+                      : status === 'Canceled'
+                      ? getRandomNumber(1, 2)
+                      : getRandomNumber(4, 12),
                 },
               ],
             },
