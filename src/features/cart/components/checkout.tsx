@@ -15,16 +15,18 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { CreditCard, X } from 'lucide-react';
+import { CreditCard, Loader2, X } from 'lucide-react';
 import NumberFlow from '@number-flow/react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import CreditCardInput from './credit-card-input';
 import ExpiryDateInput from './expiry-date-input';
 import CvcInput from './cvc-input';
+import { useCreateOrder } from '@/features/order/api/api.orders';
+import { useEffect } from 'react';
 
 function Checkout() {
-  const { totalPrice, items, openCart } = useCart();
+  const { totalPrice, items, openCart, setLoading } = useCart();
   type FormValues = z.infer<typeof orderSchema>;
   const form = useForm<FormValues>({
     resolver: zodResolver(orderSchema),
@@ -37,10 +39,15 @@ function Checkout() {
     },
   });
   const itemsCount = items.length;
-
+  const { mutateAsync, isPending } = useCreateOrder();
   function onSubmit(values: FormValues) {
-    console.log(values);
+    mutateAsync({
+      items,
+    });
   }
+  useEffect(() => {
+    setLoading(isPending);
+  }, [isPending]);
   return (
     <motion.div
       initial={{ opacity: 0, x: 20 }}
@@ -182,10 +189,14 @@ function Checkout() {
               <Button
                 className='flex-1 gap-2'
                 type='submit'
-                disabled={itemsCount === 0}
+                disabled={itemsCount === 0 || isPending}
               >
-                <CreditCard className='w-4 h-4' />
-                Pay now
+                {isPending ? (
+                  <Loader2 className='w-4 h-4 animate-spin' />
+                ) : (
+                  <CreditCard className='w-4 h-4' />
+                )}
+                {isPending ? 'Processing...' : 'Pay'}
               </Button>
             </div>
           </form>

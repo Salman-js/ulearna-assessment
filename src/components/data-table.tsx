@@ -32,7 +32,6 @@ import {
   IconGripVertical,
   IconLayoutColumns,
   IconLoader,
-  IconPlus,
   IconTrendingUp,
 } from '@tabler/icons-react';
 import {
@@ -48,10 +47,8 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -107,17 +104,7 @@ function DragHandle({ id }: { id: string }) {
   );
 }
 
-export const columns: ColumnDef<
-  Prisma.OrderGetPayload<{
-    include: {
-      products: {
-        include: {
-          product: true;
-        };
-      };
-    };
-  }>
->[] = [
+export const columns: ColumnDef<ITableOrder>[] = [
   {
     id: 'drag',
     header: () => null,
@@ -150,8 +137,8 @@ export const columns: ColumnDef<
     enableHiding: false,
   },
   {
-    accessorKey: 'header',
-    header: 'Header',
+    accessorKey: 'id',
+    header: 'Order ID',
     cell: ({ row }) => {
       return <TableCellViewer item={row.original} />;
     },
@@ -508,7 +495,7 @@ function TableCellViewer({ item }: { item: ITableOrder }) {
     <Drawer direction={isMobile ? 'bottom' : 'right'}>
       <DrawerTrigger asChild>
         <Button variant='link' className='text-foreground w-fit px-0 text-left'>
-          {item.products.length} Item(s)
+          {item.id}
         </Button>
       </DrawerTrigger>
       <DrawerContent>

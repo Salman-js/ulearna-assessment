@@ -45,9 +45,8 @@ export async function seed() {
     console.log('Products Created');
     const variants = await prisma.productVariant.findMany();
 
-    // Calculate dates: 3 months ago (12 weeks)
     const startDate = dayjs().subtract(3, 'month').startOf('week');
-    const weeks = 12;
+    const weeks = 96;
 
     // Generate orders for each variant
     const ordersData: Prisma.OrderCreateArgs['data'][] = [];
@@ -75,7 +74,7 @@ export async function seed() {
               create: [
                 {
                   productId: variant.id,
-                  quantity: Math.floor(Math.random() * 4) + 1,
+                  quantity: Math.floor(Math.random() * 10) + 1,
                 },
               ],
             },

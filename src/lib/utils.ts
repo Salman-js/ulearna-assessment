@@ -11,3 +11,17 @@ export function getRouteTitle(route: string): string {
   const routeTitle = routeName.charAt(0).toUpperCase() + routeName.slice(1);
   return routeTitle.trim().length ? routeTitle : 'Dashboard';
 }
+
+export function formatCurrency(num: number | string | undefined): string {
+  const value = roundNumber(Number(num ?? 0));
+  return value
+    ? value.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
+    : '0.00';
+}
+
+export function roundNumber(num: number): number {
+  return Math.round(num * 100) / 100;
+}

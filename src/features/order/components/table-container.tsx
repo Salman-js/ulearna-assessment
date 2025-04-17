@@ -1,10 +1,11 @@
 'use client';
 
 import { columns, DataTable } from '@/components/data-table';
-import { ITableOrder } from '@/features/order/interface/interface.order';
-import { OrderTableQuery } from '@/interface/interface.global';
-import React, { useState } from 'react';
-import { useFetchOrders } from '../api/api.orders';
+import {
+  ITableOrder,
+  OrderTableQuery,
+} from '@/features/order/interface/interface.order';
+import React, { useEffect, useState } from 'react';
 import {
   ColumnFiltersState,
   getCoreRowModel,
@@ -18,7 +19,7 @@ import {
   VisibilityState,
 } from '@tanstack/react-table';
 import { OrderStatus } from '@prisma/client';
-import { set } from 'zod';
+import { useFetchOrders } from '../api/api.orders';
 
 type TableContainerProps = {
   orders: ITableOrder[];
@@ -43,10 +44,11 @@ const TableContainer: React.FC<TableContainerProps> = ({
     period: 'one-month',
     size: pagination.pageSize,
   });
-  const { data } = useFetchOrders(initialData, queryParams);
+  const { data, refetch } = useFetchOrders(initialData, queryParams);
+  const tableData: ITableOrder[] = data ?? [];
 
   const table = useReactTable({
-    data: data ?? [],
+    data: tableData,
     columns: columns,
     state: {
       sorting,
@@ -69,6 +71,9 @@ const TableContainer: React.FC<TableContainerProps> = ({
       status: value,
     }));
   };
+  useEffect(() => {
+    refetch();
+  }, [queryParams, pagination]);
   return (
     <DataTable
       data={data ?? []}

@@ -1,6 +1,10 @@
 'use server';
 
-import { AnalyticsPeriod } from '@/interface/interface.global';
+import {
+  AnalyticsPeriod,
+  INewOrder,
+  NewProductVariantOrder,
+} from '@/features/order/interface/interface.order';
 import { OrderStatus, Prisma, PrismaClient, Product } from '@prisma/client';
 import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
@@ -88,8 +92,36 @@ export async function getOrders({
     await prisma.$disconnect();
   }
 }
+export async function createOrder(items: NewProductVariantOrder[]) {
+  try {
+    const order = await prisma.order.create({
+      data: {
+        orderDate: new Date(),
+        status: 'Pending',
+        products: {
+          create: items.map(({ productId, quantity }) => ({
+            productId,
+            quantity,
+          })),
+        },
+      },
+      include: {
+        products: {
+          include: {
+            product: true,
+          },
+        },
+      },
+    });
 
-// Client-side fetch route
+    return order;
+  } catch (error) {
+    console.error('Error creating order:', error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -113,5 +145,24 @@ export async function GET(request: Request) {
       { error: 'Failed to fetch analytics' },
       { status: 500 }
     );
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { items } = body as INewOrder;
+
+    const order = await createOrder(items);
+
+    return NextResponse.json({ message: 'Order created successfully!' });
+  } catch (error) {
+    console.error('Error creating order:', error);
+    return NextResponse.json(
+      { error: 'Failed to create order' },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
   }
 }

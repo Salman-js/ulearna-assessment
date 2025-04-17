@@ -1,7 +1,9 @@
-import { ChartAreaInteractive } from '@/components/chart-area-interactive';
 import { SectionCards } from '@/components/section-cards';
 import { getOrders } from './api/orders/route';
-import TableContainer from '@/features/analytics/components/table-container';
+import TableContainer from '@/features/order/components/table-container';
+import { getChartAnalytics } from './api/orders/analytics/route';
+import AnalyticsChart from '@/features/analytics/components/analytics-chart';
+import { getMetrics } from './api/orders/analytics/metrics/route';
 
 export default async function Page() {
   const initialData = await getOrders({
@@ -9,13 +11,15 @@ export default async function Page() {
     size: 20,
     period: 'one-month',
   });
+  const initialChartData = await getChartAnalytics();
+  const initialMetricsData = await getMetrics();
   return (
     <div className='flex flex-1 flex-col'>
       <div className='@container/main flex flex-1 flex-col gap-2'>
         <div className='flex flex-col gap-4 py-4 md:gap-6 md:py-6'>
-          <SectionCards />
+          <SectionCards metricsData={initialMetricsData} />
           <div className='px-4 lg:px-6'>
-            <ChartAreaInteractive />
+            <AnalyticsChart initialData={initialChartData} />
           </div>
           <TableContainer orders={initialData} />
         </div>

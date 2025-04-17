@@ -15,4 +15,6 @@ export interface CartContextType {
   activeTab: string;
   openCheckout: () => void;
   openCart: () => void;
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
 }

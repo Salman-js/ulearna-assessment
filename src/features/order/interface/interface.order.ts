@@ -2,6 +2,13 @@ import { ProductVariant } from '@/features/product/interface/interface.product';
 import { ColorVariant, SizeVariant } from '@/interface/interface.global';
 import { Prisma } from '@prisma/client';
 
+export type AnalyticsPeriod = 'three-months' | 'one-month' | 'one-week';
+export type OrderTableQuery = {
+  period: AnalyticsPeriod;
+  size: number;
+  page: number;
+  status?: OrderStatus;
+};
 export interface IOrder {
   id: string;
   products: ProductVariant[];
@@ -42,3 +49,37 @@ export interface ITableOrder
       };
     };
   }> {}
+
+export interface IChartOrder {
+  month: string;
+  Pending: number;
+  Delivered: number;
+  Canceled: number;
+  All: number;
+}
+
+export interface IMetrics {
+  revenue: {
+    thisMonth: number;
+    lastMonth: number;
+    growthRate: number;
+  };
+  numOfOrders: {
+    thisMonth: number;
+    lastMonth: number;
+    growthRate: number;
+  };
+  topSeller: {
+    thisMonth: string | undefined;
+    lastMonth: string | undefined;
+  };
+  topSellerSaleCount: {
+    thisMonth: number | undefined;
+    lastMonth: number | undefined;
+    growthRate: number;
+  };
+}
+
+export interface INewOrder {
+  items: NewProductVariantOrder[];
+}

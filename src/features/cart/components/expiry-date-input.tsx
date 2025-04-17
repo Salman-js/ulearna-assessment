@@ -15,21 +15,6 @@ const formatExpiryDate = (value: string): string => {
   return `${digits.slice(0, 2)}/${digits.slice(2)}`;
 };
 
-const isValidExpiry = (value: string): boolean => {
-  const digits = value.replace(/\D/g, '');
-  if (digits.length !== 4) return true; // Incomplete, don't validate yet
-  const month = parseInt(digits.slice(0, 2), 10);
-  const year = parseInt(digits.slice(2), 10);
-  const currentYear = new Date().getFullYear() % 100; // e.g., 25 for 2025
-  const currentMonth = new Date().getMonth() + 1; // 1-12
-  return (
-    month >= 1 &&
-    month <= 12 &&
-    year >= currentYear &&
-    (year > currentYear || month >= currentMonth)
-  );
-};
-
 export default function ExpiryDateInput({
   value,
   onChange,
@@ -45,7 +30,7 @@ export default function ExpiryDateInput({
       const digits = input.replace(/\D/g, '');
       const formatted = formatExpiryDate(digits);
       setDisplayValue(formatted);
-      onChange?.(digits);
+      onChange?.(formatted);
     },
     [onChange]
   );
