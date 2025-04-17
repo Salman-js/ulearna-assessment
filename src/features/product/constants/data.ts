@@ -1,6 +1,6 @@
-import { IProduct } from '../interface/interface.product';
+import { ISeedProduct } from '../interface/interface.product';
 
-export const productsSeedData: IProduct[] = [
+export const productsSeedData: ISeedProduct[] = [
   {
     id: '1',
     name: 'Hoodie',

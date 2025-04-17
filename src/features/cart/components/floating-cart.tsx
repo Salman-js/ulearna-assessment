@@ -15,10 +15,9 @@ import { Badge } from '@/components/ui/badge';
 import Checkout from './checkout';
 
 export default function FloatingCart() {
-  const { items } = useCart();
+  const { items, activeTab } = useCart();
   const itemsCount = items?.length ?? 0;
   const [isShaking, setIsShaking] = useState(false);
-  const [activeTab, setActiveTab] = useState<'cart' | 'checkout'>('cart');
 
   useEffect(() => {
     if (itemsCount) {
@@ -27,9 +26,6 @@ export default function FloatingCart() {
       return () => clearTimeout(timeout);
     }
   }, [itemsCount]);
-  const onTabChange = (tab: 'cart' | 'checkout') => {
-    setActiveTab(tab);
-  };
   return (
     <PopoverRoot>
       <div className='relative'>
@@ -44,11 +40,7 @@ export default function FloatingCart() {
       </div>
       <PopoverContent className='bottom-0 right-0'>
         <PopoverBody>
-          {activeTab === 'cart' ? (
-            <Cart onTabChange={onTabChange} />
-          ) : (
-            <Checkout onTabChange={onTabChange} />
-          )}
+          {activeTab === 'cart' ? <Cart /> : <Checkout />}
         </PopoverBody>
       </PopoverContent>
     </PopoverRoot>

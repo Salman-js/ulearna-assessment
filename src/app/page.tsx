@@ -1,10 +1,14 @@
 import { ChartAreaInteractive } from '@/components/chart-area-interactive';
-import { DataTable } from '@/components/data-table';
 import { SectionCards } from '@/components/section-cards';
+import { getOrders } from './api/orders/route';
+import TableContainer from '@/features/analytics/components/table-container';
 
-import data from './data.json';
-
-export default function Page() {
+export default async function Page() {
+  const initialData = await getOrders({
+    page: 1,
+    size: 20,
+    period: 'one-month',
+  });
   return (
     <div className='flex flex-1 flex-col'>
       <div className='@container/main flex flex-1 flex-col gap-2'>
@@ -13,7 +17,7 @@ export default function Page() {
           <div className='px-4 lg:px-6'>
             <ChartAreaInteractive />
           </div>
-          <DataTable data={data} />
+          <TableContainer orders={initialData} />
         </div>
       </div>
     </div>

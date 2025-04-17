@@ -9,6 +9,7 @@ export const CartContext = createContext<CartContextType | undefined>(
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [items, setItems] = useState<NewProductVariantOrder[]>([]);
+  const [activeTab, setActiveTab] = useState<'cart' | 'checkout'>('cart');
 
   // Add item to cart
   const addToCart = (item: NewProductVariantOrder) => {
@@ -60,6 +61,13 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     toast.success(`Cart cleared!`);
   };
 
+  const openCheckout = () => {
+    setActiveTab('checkout');
+  };
+
+  const openCart = () => {
+    setActiveTab('cart');
+  };
   // Calculate total price
   const totalPrice = items.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -75,6 +83,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         updateQuantity,
         clearCart,
         totalPrice,
+        activeTab,
+        openCheckout,
+        openCart,
       }}
     >
       {children}

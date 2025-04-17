@@ -23,12 +23,8 @@ import CreditCardInput from './credit-card-input';
 import ExpiryDateInput from './expiry-date-input';
 import CvcInput from './cvc-input';
 
-function Checkout({
-  onTabChange,
-}: {
-  onTabChange: (tab: 'cart' | 'checkout') => void;
-}) {
-  const { totalPrice, items } = useCart();
+function Checkout() {
+  const { totalPrice, items, openCart } = useCart();
   type FormValues = z.infer<typeof orderSchema>;
   const form = useForm<FormValues>({
     resolver: zodResolver(orderSchema),
@@ -177,10 +173,9 @@ function Checkout({
             <div className='w-full flex flex-row gap-2'>
               <Button
                 size='icon'
-                onClick={() => {
-                  onTabChange('cart');
-                }}
+                onClick={openCart}
                 variant='outline'
+                type='button'
               >
                 <X className='w-4 h-4' />
               </Button>

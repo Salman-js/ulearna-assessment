@@ -1,5 +1,6 @@
 import { ProductVariant } from '@/features/product/interface/interface.product';
 import { ColorVariant, SizeVariant } from '@/interface/interface.global';
+import { Prisma } from '@prisma/client';
 
 export interface IOrder {
   id: string;
@@ -26,3 +27,18 @@ export interface NewProductVariantOrder {
   price: number;
   quantity: number;
 }
+
+export interface ITableOrder
+  extends Prisma.OrderGetPayload<{
+    include: {
+      products: {
+        include: {
+          product: {
+            include: {
+              product: true;
+            };
+          };
+        };
+      };
+    };
+  }> {}

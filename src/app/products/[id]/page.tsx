@@ -1,6 +1,4 @@
 import { BreadCrumbView } from '@/components/breadcrumb-view';
-import { IProduct } from '@/features/product/interface/interface.product';
-import data from '@/features/product/data.json';
 import { Separator } from '@/components/ui/separator';
 import ProductOverview from '@/features/product/components/product-overview';
 import { getProductById } from '@/app/api/products/[id]/route';
