@@ -23,7 +23,7 @@ export default async function Page({
             },
             {
               title: 'Products',
-              route: '/store',
+              route: '/products',
             },
             {
               title: product?.name ?? 'Product',

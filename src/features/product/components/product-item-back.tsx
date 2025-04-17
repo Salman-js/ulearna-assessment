@@ -13,7 +13,7 @@ const ProductItemBack: React.FC<productItemProps> = ({ product }) => {
     <FlipCardBack
       className='rounded-3xl bg-cover bg-center bg-no-repeat shadow-xs overflow-hidden'
       style={{
-        backgroundImage: `url(/assets/products/${product?.category}/gray/front.png)`,
+        backgroundImage: `url(/assets/products/${product?.category}/gray/back.png)`,
       }}
     >
       <div className='w-full h-full flex flex-col items-center justify-center bg-gradient-to-t from-secondary from-5% to-transparent to-95%'>
@@ -22,7 +22,7 @@ const ProductItemBack: React.FC<productItemProps> = ({ product }) => {
             <MiniSizeToggle />
           </div>
           <div className='mb-3'>
-            <h4>$ {product?.defaultVariant.price}</h4>
+            <h4>$ {product?.defaultVariant?.price}</h4>
           </div>
           <MiniAddToCartButton product={product} />
         </div>

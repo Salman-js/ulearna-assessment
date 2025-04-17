@@ -11,7 +11,7 @@ type productItemProps = {
 
 const ProductItem: React.FC<productItemProps> = ({ product }) => {
   return (
-    <Link href={`/store/${product.id}`}>
+    <Link href={`/products/${product.id}`}>
       <FlipCard className='h-96 w-full'>
         <ProductItemFront product={product} />
         <ProductItemBack product={product} />

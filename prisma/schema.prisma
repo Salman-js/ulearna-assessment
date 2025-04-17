@@ -33,8 +33,8 @@ model Product {
   longDescription  String?
   category         Category
   variants         ProductVariant[] @relation("variants")
-  defaultVariant   ProductVariant   @relation(name: "default-variant", fields: [defaultVariantId], references: [id])
-  defaultVariantId String           @unique
+  defaultVariant   ProductVariant?  @relation(name: "default-variant", fields: [defaultVariantId], references: [id])
+  defaultVariantId String?          @unique
   views            View[]
 
   @@index([name, defaultVariantId])
