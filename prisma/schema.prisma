@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Category {
+  tshirt
+  hoodie
+  hat
+}
+
+enum View {
+  front
+  back
+  left
+  right
+}
+
+model Product {
+  id               String           @id @default(cuid())
+  name             String
+  shortDescription String?
+  longDescription  String?
+  category         Category
+  variants         ProductVariant[] @relation("variants")
+  defaultVariant   ProductVariant   @relation(name: "default-variant", fields: [defaultVariantId], references: [id])
+  defaultVariantId String           @unique
+  views            View[]
+
+  @@index([name, defaultVariantId])
+}
+
+enum Color {
+  white
+  gray
+  black
+}
+
+enum Size {
+  sm
+  m
+  lg
+}
+
+model ProductVariant {
+  id             String                @id @default(cuid())
+  product        Product?              @relation(name: "variants", fields: [productId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  productId      String?
+  defaultProduct Product?              @relation("default-variant")
+  size           Size
+  color          Color
+  price          Float
+  quantity       Int
+  orders         ProductVariantOrder[]
+
+  @@index([productId])
+}
+
+enum OrderStatus {
+  Pending
+  Delivered
+  Canceled
+}
+
+model Order {
+  id        String                @id @default(cuid())
+  products  ProductVariantOrder[]
+  status    OrderStatus           @default(Pending)
+  orderDate DateTime              @default(now())
+
+  @@index([status])
+}
+
+model ProductVariantOrder {
+  id        String          @id @default(cuid())
+  order     Order?          @relation(fields: [orderId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  orderId   String?
+  product   ProductVariant? @relation(fields: [productId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  productId String?
+  quantity  Int
+
+  @@index([orderId, productId])
+}

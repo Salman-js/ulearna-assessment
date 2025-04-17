@@ -1,4 +1,6 @@
-export type ColorVariant = 'white' | 'black' | 'gray';
-export type SizeVariant = 'sm' | 'lg' | 'xl';
-export type Category = 'tshirt' | 'hoodie' | 'hat';
-export type ViewVariant = 'front' | 'back' | 'left' | 'right';
+import { Color, Size, Category as PrismaCategory, View } from '@prisma/client';
+
+export type ColorVariant = Color;
+export type SizeVariant = Size;
+export type Category = PrismaCategory;
+export type ViewVariant = View;
