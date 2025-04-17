@@ -7,10 +7,15 @@ import { cn } from '@/lib/utils';
 import NumberFlow from '@number-flow/react';
 import { useCart } from '../hooks/use-cart';
 
-function Cart() {
+function Cart({
+  onTabChange,
+}: {
+  onTabChange: (tab: 'cart' | 'checkout') => void;
+}) {
   const { items, removeFromCart, updateQuantity, totalPrice } = useCart();
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const itemsCount = items.length;
 
   return (
     <motion.div
@@ -139,7 +144,12 @@ function Cart() {
           </motion.span>
         </div>
       </motion.div>
-      <Button size='sm' className='w-full gap-2'>
+      <Button
+        size='sm'
+        className='w-full gap-2'
+        onClick={() => onTabChange('checkout')}
+        disabled={itemsCount === 0}
+      >
         <CreditCard className='w-4 h-4' />
         Checkout
       </Button>

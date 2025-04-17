@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useCart } from '../hooks/use-cart';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,31 +9,26 @@ import { z } from 'zod';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { CreditCard } from 'lucide-react';
+import { CreditCard, X } from 'lucide-react';
 import NumberFlow from '@number-flow/react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useId } from 'react';
-import { usePaymentInputs } from 'react-payment-inputs';
-import images, { type CardImages } from 'react-payment-inputs/images';
+import CreditCardInput from './credit-card-input';
+import ExpiryDateInput from './expiry-date-input';
+import CvcInput from './cvc-input';
 
-function Checkout() {
-  const { totalPrice } = useCart();
-  const id = useId();
-  const {
-    meta,
-    getCardNumberProps,
-    getExpiryDateProps,
-    getCVCProps,
-    getCardImageProps,
-  } = usePaymentInputs();
+function Checkout({
+  onTabChange,
+}: {
+  onTabChange: (tab: 'cart' | 'checkout') => void;
+}) {
+  const { totalPrice, items } = useCart();
   type FormValues = z.infer<typeof orderSchema>;
   const form = useForm<FormValues>({
     resolver: zodResolver(orderSchema),
@@ -45,6 +40,8 @@ function Checkout() {
       expirationDate: '',
     },
   });
+  const itemsCount = items.length;
+
   function onSubmit(values: FormValues) {
     console.log(values);
   }
@@ -58,7 +55,7 @@ function Checkout() {
         'bg-white dark:bg-zinc-900',
         'border border-zinc-200 dark:border-zinc-800',
         'sticky top-4',
-        'max-h-[32rem]'
+        'max-h-[44rem]'
       )}
     >
       <div className='flex items-center gap-2 mb-3'>
@@ -67,26 +64,18 @@ function Checkout() {
           Confirm and Pay
         </h2>
       </div>
-      <motion.div
-        className={cn(
-          'flex-1 overflow-y-auto',
-          'min-h-0',
-          '-mx-4 px-4',
-          'space-y-3'
-        )}
-      >
-        <AnimatePresence initial={false} mode='popLayout'>
-          <label className='border-input has-data-[state=checked]:border-primary/50 has-focus-visible:border-ring has-focus-visible:ring-ring/50 relative flex cursor-pointer flex-col gap-1 rounded-md border px-4 py-3 shadow-xs transition-[color,box-shadow] outline-none has-focus-visible:ring-[3px]'>
-            <p className='text-foreground text-sm font-medium'>Total</p>
-            <motion.span
-              layout
-              className='text-sm font-semibold text-zinc-900 dark:text-zinc-100'
-            >
-              <NumberFlow value={totalPrice} />
-            </motion.span>
-          </label>
-        </AnimatePresence>
-      </motion.div>
+      <div className=''>
+        <label className='border-input has-data-[state=checked]:border-primary/50 has-focus-visible:border-ring has-focus-visible:ring-ring/50 relative flex cursor-pointer flex-col gap-1 rounded-md border px-4 py-3 shadow-xs transition-[color,box-shadow] outline-none has-focus-visible:ring-[3px]'>
+          <p className='text-foreground text-sm font-medium'>Total</p>
+          <motion.span
+            layout
+            className='text-lg font-semibold text-zinc-900 dark:text-zinc-100'
+          >
+            <span className='text-sm mr-1'>$</span>
+            <NumberFlow value={totalPrice} />
+          </motion.span>
+        </label>
+      </div>
       <motion.div
         layout
         className={cn(
@@ -129,44 +118,81 @@ function Checkout() {
               </legend>
               <div className='rounded-md shadow-xs'>
                 <div className='relative focus-within:z-10'>
-                  <Input
-                    className='peer rounded-b-none pe-9 shadow-none [direction:inherit]'
-                    {...getCardNumberProps()}
-                  />
-                  <div className='text-muted-foreground/80 pointer-events-none absolute inset-y-0 end-0 flex items-center justify-center pe-3 peer-disabled:opacity-50'>
-                    {meta.cardType ? (
-                      <svg
-                        className='overflow-hidden rounded-sm'
-                        {...getCardImageProps({
-                          images: images as unknown as CardImages,
-                        })}
-                        width={20}
-                      />
-                    ) : (
-                      <CreditCard size={16} aria-hidden='true' />
+                  <FormField
+                    control={form.control}
+                    name='cardNumber'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <CreditCardInput
+                            className='peer rounded-b-none pe-9 shadow-none [direction:inherit]'
+                            {...field}
+                            placeholder='Card Number'
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
                     )}
-                  </div>
+                  />
                 </div>
                 <div className='-mt-px flex'>
                   <div className='min-w-0 flex-1 focus-within:z-10'>
-                    <Input
-                      className='rounded-e-none rounded-t-none shadow-none [direction:inherit]'
-                      {...getExpiryDateProps()}
+                    <FormField
+                      control={form.control}
+                      name='expirationDate'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <ExpiryDateInput
+                              className='rounded-e-none rounded-t-none shadow-none [direction:inherit]'
+                              {...field}
+                              placeholder='Expiry Date'
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
                   <div className='-ms-px min-w-0 flex-1 focus-within:z-10'>
-                    <Input
-                      className='rounded-s-none rounded-t-none shadow-none [direction:inherit]'
-                      {...getCVCProps()}
+                    <FormField
+                      control={form.control}
+                      name='cvv'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <CvcInput
+                              className='rounded-s-none rounded-t-none shadow-none [direction:inherit]'
+                              {...field}
+                              placeholder='CVC'
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
                     />
                   </div>
                 </div>
               </div>
             </div>
-            <Button size='sm' className='w-full gap-2' type='submit'>
-              <CreditCard className='w-4 h-4' />
-              Pay now
-            </Button>
+            <div className='w-full flex flex-row gap-2'>
+              <Button
+                size='icon'
+                onClick={() => {
+                  onTabChange('cart');
+                }}
+                variant='outline'
+              >
+                <X className='w-4 h-4' />
+              </Button>
+              <Button
+                className='flex-1 gap-2'
+                type='submit'
+                disabled={itemsCount === 0}
+              >
+                <CreditCard className='w-4 h-4' />
+                Pay now
+              </Button>
+            </div>
           </form>
         </Form>
       </motion.div>
