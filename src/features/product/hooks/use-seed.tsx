@@ -2,8 +2,11 @@
 
 import { useState, useTransition } from 'react';
 import { notEmpty, purge, seed } from '../constants/seed';
+import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
 
 export function useSeed() {
+  const queryClient = useQueryClient();
   const [isPending, startTransition] = useTransition();
   const [isChecking, startCheckTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -23,8 +26,11 @@ export function useSeed() {
         setSuccess(true);
       } catch (err) {
         console.log('Error: ', err);
+        toast.error('Error generating data');
         setError(err instanceof Error ? err.message : 'Seeding failed');
       } finally {
+        toast.success('Data generated successfully!');
+        queryClient.resetQueries();
         setTimeout(() => {
           setError(null);
           setSuccess(false);
@@ -44,8 +50,11 @@ export function useSeed() {
         setSuccess(true);
       } catch (err) {
         console.log('Error: ', err);
+        toast.error('Error purging data');
         setError(err instanceof Error ? err.message : 'Seeding failed');
       } finally {
+        toast.success('Data reset successfully!');
+        queryClient.resetQueries();
         setTimeout(() => {
           setError(null);
           setSuccess(false);

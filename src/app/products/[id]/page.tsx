@@ -3,6 +3,7 @@ import { IProduct } from '@/features/product/interface/interface.product';
 import data from '@/features/product/data.json';
 import { Separator } from '@/components/ui/separator';
 import ProductOverview from '@/features/product/components/product-overview';
+import { getProductById } from '@/app/api/products/[id]/route';
 
 export default async function Page({
   params,
@@ -10,8 +11,7 @@ export default async function Page({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const products: IProduct[] = data as any;
-  const product = products.find((product) => product.id === id);
+  const product = await getProductById(id);
   return (
     <div className='@container/main flex flex-col flex-1 p-6 gap-6'>
       <div className='w-full'>

@@ -27,7 +27,7 @@ export function NavMain({
     <SidebarGroup>
       <SidebarGroupContent className='flex flex-col gap-2'>
         <SidebarSeparator />
-        <SidebarMenu>
+        {/* <SidebarMenu>
           <SidebarMenuItem className='flex items-center gap-2'>
             <SidebarMenuButton
               tooltip='New Product'
@@ -37,8 +37,8 @@ export function NavMain({
               <span className='font-semibold'>New Product</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
-        </SidebarMenu>
-        <SidebarSeparator />
+        </SidebarMenu> */}
+        {/* <SidebarSeparator /> */}
         <SidebarMenu>
           {items.map((item) => (
             <Link href={item.url} key={item.title}>

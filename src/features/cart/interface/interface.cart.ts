@@ -1,12 +1,13 @@
+import { NewProductVariantOrder } from '@/features/order/interface/interface.order';
 import { ProductVariant } from '@/features/product/interface/interface.product';
 
 export interface ICart {
-  items: ProductVariant[];
+  items: NewProductVariantOrder[];
 }
 
 export interface CartContextType {
-  items: ProductVariant[];
-  addToCart: (item: ProductVariant) => void;
+  items: NewProductVariantOrder[];
+  addToCart: (item: NewProductVariantOrder) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;

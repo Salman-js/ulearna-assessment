@@ -12,7 +12,7 @@ const ProductItemFront: React.FC<productItemProps> = ({ product }) => {
       <div
         className='w-full h-full bg-cover bg-center bg-no-repeat flex flex-col justify-end'
         style={{
-          backgroundImage: `url(/assets/products/${product?.category}/gray/front.png)`,
+          backgroundImage: `url(/assets/products/${product?.category}/${product?.defaultVariant?.color}/front.png)`,
         }}
       >
         <div className='w-full h-full flex flex-col justify-end items-start p-4 bg-gradient-to-t from-secondary from-5% to-transparent to-95%'>
@@ -26,7 +26,7 @@ const ProductItemFront: React.FC<productItemProps> = ({ product }) => {
             <div>
               <span className='text-2xl font-bold'>
                 <span className='text-base font-normal px-1'>$</span>
-                {product.defaultVariant.price}
+                {product?.defaultVariant?.price}
               </span>
             </div>
           </div>

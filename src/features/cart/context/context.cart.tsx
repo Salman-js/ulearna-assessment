@@ -1,44 +1,63 @@
 import { createContext, useContext, useState } from 'react';
 import { CartContextType } from '../interface/interface.cart';
-import { ProductVariant } from '@/features/product/interface/interface.product';
+import { NewProductVariantOrder } from '@/features/order/interface/interface.order';
+import { toast } from 'sonner';
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+export const CartContext = createContext<CartContextType | undefined>(
+  undefined
+);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [items, setItems] = useState<ProductVariant[]>([]);
+  const [items, setItems] = useState<NewProductVariantOrder[]>([]);
 
   // Add item to cart
-  const addToCart = (item: ProductVariant) => {
+  const addToCart = (item: NewProductVariantOrder) => {
     setItems((prevCart) => {
-      const existingItem = prevCart.find((i) => i.id === item.id);
+      const existingItem = prevCart.find(
+        (i) =>
+          i.productId === item.productId &&
+          i.color === item.color &&
+          i.size === item.size
+      );
       if (existingItem) {
         return prevCart.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i
+          i.productId === item.productId &&
+          i.color === item.color &&
+          i.size === item.size
+            ? { ...i, quantity: i.quantity + item.quantity }
+            : i
         );
       }
       return [...prevCart, item];
     });
+    toast.success(`${item.productName} added to cart!`);
   };
 
   // Remove item from cart
   const removeFromCart = (id: string) => {
     setItems((prevCart) => prevCart.filter((item) => item.id !== id));
+    toast.success(`Item removed from cart!`);
   };
 
   // Update item quantity
   const updateQuantity = (id: string, quantity: number) => {
-    if (quantity < 1) {
+    const item = items.find((i) => i.id === id);
+    if (!item) return;
+    if (item.quantity + quantity <= 0) {
       removeFromCart(id);
       return;
     }
     setItems((prevCart) =>
-      prevCart.map((item) => (item.id === id ? { ...item, quantity } : item))
+      prevCart.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity + quantity } : item
+      )
     );
   };
 
   // Clear the cart
   const clearCart = () => {
     setItems([]);
+    toast.success(`Cart cleared!`);
   };
 
   // Calculate total price
@@ -64,10 +83,3 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 // Custom hook to use the Cart Context
-export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
-  return context;
-};

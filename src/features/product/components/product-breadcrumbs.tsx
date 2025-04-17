@@ -9,9 +9,6 @@ export function ProductBreadCrumbs() {
           route: '/',
         },
         {
-          title: 'Store',
-        },
-        {
           title: 'Products',
         },
       ]}

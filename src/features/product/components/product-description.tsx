@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 export default function ProductDescription({
   description,
 }: {
-  description?: string;
+  description?: string | null;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const maxLength = 300;

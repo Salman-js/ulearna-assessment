@@ -3,7 +3,7 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import HeaderTitle from './header-title';
 import ThemeSwitcher from './theme-switcher';
-import SeedAndPurge from '@/features/product/components/seed-and-purge';
+import { DatabaseSeedActions } from '@/features/product/components/database-seed-actions';
 
 export function SiteHeader() {
   return (
@@ -16,7 +16,7 @@ export function SiteHeader() {
         />
         <HeaderTitle />
         <div className='ml-auto flex items-center gap-2'>
-          <SeedAndPurge />
+          <DatabaseSeedActions />
           <ThemeSwitcher />
           <Button variant='ghost' asChild size='sm' className='hidden sm:flex'>
             <a

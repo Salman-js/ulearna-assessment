@@ -1,11 +1,7 @@
 'use client';
 
-import {
-  IProduct,
-  ProductVariant,
-} from '@/features/product/interface/interface.product';
+import { IProduct } from '@/features/product/interface/interface.product';
 import { useEffect, useMemo, useState } from 'react';
-import { useDefaultImageColor } from '../hooks/use-image';
 import Image from 'next/image';
 import ProductImage from './product-image';
 import {
@@ -16,24 +12,26 @@ import {
 import ProductDescription from './product-description';
 import { cn } from '@/lib/utils';
 import { SizeToggle } from './size-toggle';
-import { IconMinus, IconPlus } from '@tabler/icons-react';
+import { IconMinus, IconPlus, IconShoppingCartPlus } from '@tabler/icons-react';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
+import { useCart } from '@/features/cart/hooks/use-cart';
+import { NewProductVariantOrder } from '@/features/order/interface/interface.order';
 
 export default function ProductOverview({
   product,
 }: {
-  product: IProduct | undefined;
+  product: IProduct | null;
 }) {
+  const { addToCart } = useCart();
   const { name, defaultVariant, shortDescription, longDescription, views } =
     product ?? {};
-  const imageColor = useDefaultImageColor();
   const [view, setView] = useState<ViewVariant>('front');
   const [selectedVariant, setSelectedVariant] = useState<{
     color?: ColorVariant;
     size?: SizeVariant;
   }>({
-    color: imageColor,
+    color: defaultVariant?.color,
     size: defaultVariant?.size,
   });
   const [quantity, setQuantity] = useState<number>(1);
@@ -51,7 +49,7 @@ export default function ProductOverview({
   useEffect(() => {
     if (product) {
       setSelectedVariant({
-        color: imageColor,
+        color: defaultVariant?.color,
         size: defaultVariant?.size,
       });
     }
@@ -73,6 +71,25 @@ export default function ProductOverview({
   };
   const handleSelectView = (vw: 'front' | 'back' | 'left' | 'right') => {
     setView(vw);
+  };
+  const handleAddToCart = () => {
+    const currentVariant = product?.variants.find(
+      (variant) =>
+        variant.color === selectedVariant?.color &&
+        variant.size === selectedVariant?.size
+    );
+    if (currentVariant && product) {
+      const newCartItem: NewProductVariantOrder = {
+        id: Math.random().toString(),
+        price: currentVariant?.price ?? 0,
+        productId: currentVariant?.id,
+        quantity,
+        size: currentVariant?.size,
+        color: currentVariant?.color,
+        productName: product?.name,
+      };
+      addToCart(newCartItem);
+    }
   };
   return (
     <div className='w-full lg:w-4/5 columns-1 lg:columns-2 md:columns-1 xl:columns-2 mt-4 gap-4'>
@@ -167,8 +184,8 @@ export default function ProductOverview({
                 </Button>
               </div>
             </div>
-            <Button className='flex-1'>
-              <ShoppingCart /> Add to Cart
+            <Button className='flex-1' onClick={handleAddToCart}>
+              <IconShoppingCartPlus /> Add to Cart
             </Button>
           </div>
         </div>
