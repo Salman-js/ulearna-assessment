@@ -1,7 +1,8 @@
 'use server';
 
-import { Prisma, PrismaClient, Product } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { NextResponse } from 'next/server';
+import { logError } from '../logs/route';
 
 const prisma = new PrismaClient();
 
@@ -20,6 +21,11 @@ export async function getProducts(): Promise<
     return products;
   } catch (error) {
     console.error('Error fetching products:', error);
+    await logError({
+      stack: 'Products',
+      error: 'Error fetching products: ' + error,
+      timestamp: new Date().toISOString(),
+    });
     throw error;
   } finally {
     await prisma.$disconnect();

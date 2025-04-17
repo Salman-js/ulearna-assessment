@@ -12,20 +12,35 @@ async function ensureLogDirectory() {
     console.error('Failed to create logs directory:', err);
   }
 }
-
-export async function POST(request: Request) {
+export async function logError({
+  error,
+  stack,
+  timestamp,
+}: {
+  error: string;
+  stack: string;
+  timestamp: string;
+}) {
   try {
-    const { error, stack, componentStack, timestamp } = await request.json();
     const logEntry =
       JSON.stringify({
         timestamp,
         error,
         stack,
-        componentStack,
       }) + '\n';
-
     await ensureLogDirectory();
     await fs.appendFile(logFilePath, logEntry, 'utf8');
+    return;
+  } catch (err) {
+    console.error('Error logging to file:', err);
+    throw new Error();
+  }
+}
+export async function POST(request: Request) {
+  try {
+    const { error, stack, timestamp } = await request.json();
+
+    await logError({ error, stack, timestamp });
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error('Error logging to file:', err);

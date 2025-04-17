@@ -8,6 +8,7 @@ import {
 import { OrderStatus, Prisma, PrismaClient, Product } from '@prisma/client';
 import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
+import { logError } from '../logs/route';
 
 const prisma = new PrismaClient();
 const getDateRange = (
@@ -87,6 +88,11 @@ export async function getOrders({
     return orders;
   } catch (error) {
     console.error('Error fetching products:', error);
+    await logError({
+      stack: 'Products',
+      error: 'Error fetching orders: ' + error,
+      timestamp: new Date().toISOString(),
+    });
     throw error;
   } finally {
     await prisma.$disconnect();
@@ -117,6 +123,11 @@ export async function createOrder(items: NewProductVariantOrder[]) {
     return order;
   } catch (error) {
     console.error('Error creating order:', error);
+    await logError({
+      stack: 'Order',
+      error: 'Error creating order: ' + error,
+      timestamp: new Date().toISOString(),
+    });
     throw error;
   } finally {
     await prisma.$disconnect();

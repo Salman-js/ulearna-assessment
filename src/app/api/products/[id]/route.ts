@@ -2,6 +2,7 @@
 
 import { Prisma, PrismaClient, Product } from '@prisma/client';
 import { NextResponse } from 'next/server';
+import { logError } from '../../logs/route';
 
 const prisma = new PrismaClient();
 
@@ -23,6 +24,11 @@ export async function getProductById(
     return product;
   } catch (error) {
     console.error('Error fetching product:', error);
+    await logError({
+      stack: 'Product',
+      error: 'Error fetching product : ' + id + ' ' + error,
+      timestamp: new Date().toISOString(),
+    });
     throw error;
   } finally {
     await prisma.$disconnect();

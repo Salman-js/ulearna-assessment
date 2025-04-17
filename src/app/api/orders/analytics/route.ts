@@ -4,48 +4,10 @@ import { AnalyticsPeriod } from '@/features/order/interface/interface.order';
 import { OrderStatus, Prisma, PrismaClient, Product } from '@prisma/client';
 import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
+import { logError } from '../../logs/route';
+import { getOrdersByDateRange } from './metrics/route';
 
 const prisma = new PrismaClient();
-export async function getOrdersByDateRange({
-  startDate,
-  endDate,
-}: {
-  startDate: Date;
-  endDate: Date;
-}) {
-  try {
-    const dateRange = {
-      gte: dayjs(startDate).startOf('day').toDate(),
-      lte: dayjs(endDate).endOf('day').toDate(),
-    };
-    const where: Prisma.OrderWhereInput = {
-      orderDate: dateRange,
-    };
-    const orders = await prisma.order.findMany({
-      where,
-      orderBy: {
-        orderDate: 'desc',
-      },
-      include: {
-        products: {
-          include: {
-            product: {
-              include: {
-                product: true,
-              },
-            },
-          },
-        },
-      },
-    });
-    return orders;
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    throw error;
-  } finally {
-    await prisma.$disconnect();
-  }
-}
 export async function getChartAnalytics(): Promise<
   {
     month: string;
@@ -107,6 +69,11 @@ export async function getChartAnalytics(): Promise<
     return ordersByMonth;
   } catch (error) {
     console.error('Error fetching products:', error);
+    await logError({
+      stack: 'Analytics',
+      error: 'Error fetching chart analytics: ' + error,
+      timestamp: new Date().toISOString(),
+    });
     throw error;
   } finally {
     await prisma.$disconnect();
