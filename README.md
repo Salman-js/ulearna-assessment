@@ -1,6 +1,6 @@
 # Ulearna Store
 
-Built with Next.js, TailwindCSS & Prisma
+Built with Next.js, Framer Motion, TailwindCSS & Prisma
 
 ## Project Setup
 
@@ -15,7 +15,7 @@ Built with Next.js, TailwindCSS & Prisma
 1. Clone the repository:
 
 ```bash
-git clone [repository-url]
+git clone https://github.com/Salman-js/ulearna-assessment
 cd ulearna-assessment
 ```
 
