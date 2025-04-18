@@ -21,13 +21,8 @@ import {
 import { OrderStatus } from '@prisma/client';
 import { useFetchOrders } from '../api/api.orders';
 
-type TableContainerProps = {
-  orders: ITableOrder[];
-};
 
-const TableContainer: React.FC<TableContainerProps> = ({
-  orders: initialData,
-}) => {
+const TableContainer: React.FC = () => {
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 20,
@@ -42,7 +37,7 @@ const TableContainer: React.FC<TableContainerProps> = ({
     period: 'one-month',
     size: pagination.pageSize,
   });
-  const { data, refetch } = useFetchOrders(initialData, queryParams);
+  const { data, refetch } = useFetchOrders(queryParams);
   const tableData: ITableOrder[] = data ?? [];
 
   const table = useReactTable({

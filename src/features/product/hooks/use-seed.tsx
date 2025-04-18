@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { notEmpty, purge, seed } from '../constants/seed';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
+import dayjs from 'dayjs';
 
 export function useSeed() {
   const queryClient = useQueryClient();
@@ -23,12 +24,14 @@ export function useSeed() {
         toast.error('Error generating data');
         setError(err instanceof Error ? err.message : 'Seeding failed');
       } finally {
-        toast.success('Data generated successfully!');
-        queryClient.clear();
+        toast('Data Generated Successfully', {
+          description: dayjs().format('MMM DD, YYYY'),
+        });
         setTimeout(() => {
           setError(null);
           setSuccess(false);
-        }, 5000);
+          window.location.reload();
+        }, 3000);
       }
     });
   };
@@ -46,12 +49,14 @@ export function useSeed() {
         toast.error('Error purging data');
         setError(err instanceof Error ? err.message : 'Seeding failed');
       } finally {
-        toast.success('Data reset successfully!');
-        queryClient.clear();
+        toast('Data Reset Successfully', {
+          description: dayjs().format('MMM DD, YYYY'),
+        });
         setTimeout(() => {
           setError(null);
           setSuccess(false);
-        }, 5000);
+          window.location.reload();
+        }, 3000);
       }
     });
   };

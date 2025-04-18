@@ -7,30 +7,6 @@ import { getRandomNumber } from '@/lib/utils';
 import prisma from '@/lib/prisma';
 import Sentry from '@/lib/sentry';
 
-const productsData: Prisma.ProductCreateInput[] = productsSeedData.map(
-  ({ defaultVariant, variants, views, id, ...prod }) => ({
-    ...prod,
-    defaultVariant: defaultVariant
-      ? {
-          create: {
-            color: defaultVariant.color,
-            price: defaultVariant.price,
-            quantity: defaultVariant.quantity,
-            size: defaultVariant.size,
-          },
-        }
-      : undefined,
-    variants: {
-      createMany: {
-        data: variants,
-      },
-    },
-    views: {
-      set: views,
-    },
-  })
-);
-
 export async function seed() {
   try {
     console.log('Starting database seeding...');
@@ -40,72 +16,106 @@ export async function seed() {
     await prisma.order.deleteMany();
 
     console.log('Creating products...');
+    const productsData: Prisma.ProductCreateInput[] = productsSeedData.map(
+      ({ defaultVariant, variants, views, id, ...prod }) => ({
+        ...prod,
+        views: {
+          set: views,
+        },
+        defaultVariant: defaultVariant
+          ? {
+              create: {
+                color: defaultVariant.color,
+                price: defaultVariant.price,
+                quantity: defaultVariant.quantity,
+                size: defaultVariant.size,
+              },
+            }
+          : undefined,
+      })
+    );
+
     for (const prod of productsData) {
-      await prisma.product.create({
-        data: {
-          ...prod,
-          variants: {
-            create: prod.variants?.create || [],
-          },
-          defaultVariant: prod.defaultVariant || undefined,
-        },
+      console.log(`Creating product: ${prod.name}`);
+      const createdProduct = await prisma.product.create({
+        data: prod,
       });
-    }
-    console.log('Products Created');
+      console.log(`Created product with ID: ${createdProduct.id}`);
 
-    const variants = await prisma.productVariant.findMany({
-      where: {
-        productId: {
-          not: null,
-        },
-      },
+      // Find the corresponding seed data to get variants
+      const seedProduct = productsSeedData.find((p) => p.name === prod.name);
+      if (seedProduct?.variants) {
+        console.log(
+          `Creating ${seedProduct.variants.length} variants for product: ${prod.name}`
+        );
+        await prisma.productVariant.createMany({
+          data: seedProduct.variants.map((variant) => ({
+            color: variant.color as 'white' | 'gray' | 'black',
+            size: variant.size as 'sm' | 'm' | 'lg',
+            price: variant.price,
+            quantity: variant.quantity,
+            productId: createdProduct.id,
+          })),
+        });
+        console.log(`Created variants for product: ${prod.name}`);
+      }
+    }
+    console.log('Products and variants created');
+
+    // Verify created products and variants
+    const createdProducts = await prisma.product.findMany({
+      include: { variants: true, defaultVariant: true },
     });
-    console.log('Variants found:', variants);
+    console.log(
+      'Created products with variants:',
+      JSON.stringify(createdProducts, null, 2)
+    );
 
-    if (!variants.length) {
-      throw new Error(
-        'No variants found. Ensure productsData creates ProductVariant records.'
-      );
-    }
-
-    const startDate = dayjs().subtract(3, 'month').startOf('week');
-    const weeks = 14;
-
-    const ordersData: Prisma.OrderCreateArgs['data'][] = [];
+    const variants = await prisma.productVariant.findMany();
 
     console.log('Creating orders...');
-    // Define possible order statuses
     const possibleStatuses = [
       OrderStatus.Pending,
       OrderStatus.Delivered,
       OrderStatus.Canceled,
     ];
 
-    for (const variant of variants) {
-      for (let week = 0; week < weeks; week++) {
-        const weekStart = startDate.add(week, 'week');
+    // Define the time range: April 18, 2024 to April 18, 2025
+    const startDate = dayjs().startOf('year');
+    const endDate = dayjs();
+    const daysInYear = endDate.diff(startDate, 'day'); // 365 days
 
+    // Generate exactly 50 orders
+    const ordersData: Prisma.OrderCreateArgs['data'][] = Array.from(
+      { length: 30 },
+      () => {
+        // Pick a random variant
+        const randomVariant =
+          variants[Math.floor(Math.random() * variants.length)];
         // Pick a random status
         const randomStatus =
           possibleStatuses[Math.floor(Math.random() * possibleStatuses.length)];
-        // Pick a random day offset (1 to 5)
-        const dayOffset = getRandomNumber(1, 5);
-        const orderDate = weekStart.add(dayOffset, 'day').toDate();
+        // Pick a random number of days (0 to 365)
+        const randomDays = Math.floor(Math.random() * daysInYear);
+        // Calculate the order date
+        const orderDate = startDate.add(randomDays, 'day').toDate();
+        // Pick a random quantity
+        const quantity = getRandomNumber(1, 5);
 
-        ordersData.push({
+        return {
           status: randomStatus,
           orderDate,
           products: {
             create: [
               {
-                productId: variant.id, // Ensure this is ProductVariant id
-                quantity: getRandomNumber(1, 5),
+                productId: randomVariant.id,
+                quantity,
               },
             ],
           },
-        });
+        };
       }
-    }
+    );
 
     console.log('Orders to create:', ordersData.length);
     for (const orderData of ordersData) {

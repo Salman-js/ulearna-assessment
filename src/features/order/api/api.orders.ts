@@ -13,15 +13,11 @@ import {
 import { useFetchQuery, useMutate } from '@/hooks/query.hooks';
 import { useQueryClient } from '@tanstack/react-query';
 
-export function useFetchOrders(
-  initialData: ITableOrder[],
-  params: OrderTableQuery
-) {
+export function useFetchOrders(params: OrderTableQuery) {
   return useFetchQuery<ITableOrder[]>(
     '/api/orders',
     ['orders', params],
-    params,
-    initialData
+    params
   );
 }
 export const useCreateOrder = () => {
