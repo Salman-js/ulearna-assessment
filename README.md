@@ -91,30 +91,33 @@ npm start
 docker-compose up -d
 ```
 
-## Unit Tests for Critical Components
+## Features Implemented
 
-The project includes comprehensive testing for critical components. To run tests:
+### Core Features
 
-```bash
-# Run all tests
-npm test
+- **Product Image Gallery**: Interactive gallery with zoom functionality for detailed product viewing
+- **Variant Selection**: Real-time updates for color and size variants with visual feedback
+- **Shopping Cart**: Add to cart functionality with quantity selector and real-time updates
+- **Product Details**: Comprehensive product description with expandable sections for better UX
+- **Responsive Design**: Fully responsive layout that adapts to all device sizes
 
-# Run tests in watch mode
-npm run test:watch
-```
+### Advanced Features
 
-### Test Coverage
+- **Custom State Management**: Built using React Context and useReducer for efficient state handling
+- **Form Validation System**: Real-time validation with immediate user feedback
+- **Error Boundary System**: Custom error handling with recovery options for better user experience
 
-- Component rendering and interactions
-- Form validations
-- API integrations
-- Database operations
-- State management
+### Technical Features
 
-### Testing Best Practices
+- **Next.js 15+**: Utilizing the latest App Router for optimal performance
+- **TypeScript**: Full type safety throughout the application
+- **Accessibility**: WCAG 2.1 compliance (50% implementation)
+- **Loading States**: Smooth loading indicators and skeleton screens
+- **Error States**: Graceful error handling and user feedback
+- **Performance**: Optimized for fast loading and smooth interactions
 
-1. Write tests before implementing features (TDD)
-2. Focus on testing component behavior rather than implementation details
-3. Use mock data for API calls
-4. Test edge cases and error scenarios
-5. Maintain high test coverage for critical paths
+### Bonus Features
+
+- **Theme Support**: Dark/light mode with system preference detection
+- **Analytics**: Data visualization with real-time data
+- **Error Logging**: Comprehensive error logging system for debugging and monitoring

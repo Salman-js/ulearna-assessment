@@ -5,7 +5,6 @@ import {
   MenubarContent,
   MenubarItem,
   MenubarMenu,
-  MenubarShortcut,
   MenubarTrigger,
 } from '@/components/ui/menubar';
 import { IconDatabase } from '@tabler/icons-react';
@@ -27,10 +26,10 @@ export function DatabaseSeedActions() {
         </MenubarTrigger>
         <MenubarContent>
           <MenubarItem onClick={seed} disabled={isPending}>
-            Generate Data <MenubarShortcut>⌘G</MenubarShortcut>
+            Generate Data
           </MenubarItem>
           <MenubarItem onClick={purge} disabled={isPending}>
-            Purge Data <MenubarShortcut>⌘D</MenubarShortcut>
+            Purge Data
           </MenubarItem>
         </MenubarContent>
       </MenubarMenu>
