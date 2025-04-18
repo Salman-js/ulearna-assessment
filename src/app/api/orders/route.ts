@@ -5,12 +5,12 @@ import {
   INewOrder,
   NewProductVariantOrder,
 } from '@/features/order/interface/interface.order';
-import { OrderStatus, Prisma, PrismaClient, Product } from '@prisma/client';
+import { OrderStatus, Prisma } from '@prisma/client';
 import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
 import { logError } from '../logs/route';
+import prisma from '@/lib/prisma';
 
-const prisma = new PrismaClient();
 const getDateRange = (
   period: AnalyticsPeriod
 ): { startDate: Date; endDate: Date } => {

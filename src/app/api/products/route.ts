@@ -1,10 +1,9 @@
 'use server';
 
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { logError } from '../logs/route';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 export async function getProducts(): Promise<
   Prisma.ProductGetPayload<{

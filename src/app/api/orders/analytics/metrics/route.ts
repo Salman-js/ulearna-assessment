@@ -2,11 +2,11 @@
 
 import { logError } from '@/app/api/logs/route';
 import { IMetrics } from '@/features/order/interface/interface.order';
-import { OrderStatus, Prisma, PrismaClient, Product } from '@prisma/client';
+import prisma from '@/lib/prisma';
+import { OrderStatus, Prisma } from '@prisma/client';
 import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
 
-const prisma = new PrismaClient();
 export async function getOrdersByDateRange({
   startDate,
   endDate,

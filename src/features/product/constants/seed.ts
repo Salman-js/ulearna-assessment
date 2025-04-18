@@ -1,11 +1,10 @@
 'use server';
 
-import { PrismaClient, Prisma, OrderStatus } from '@prisma/client';
+import { Prisma, OrderStatus } from '@prisma/client';
 import { productsSeedData } from './data';
 import dayjs from 'dayjs';
 import { getRandomNumber } from '@/lib/utils';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 const productsData: Prisma.ProductCreateInput[] = productsSeedData.map(
   ({ defaultVariant, variants, views, id, ...prod }) => ({

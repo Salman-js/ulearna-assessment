@@ -1,13 +1,12 @@
 'use server';
 
-import { AnalyticsPeriod } from '@/features/order/interface/interface.order';
-import { OrderStatus, Prisma, PrismaClient, Product } from '@prisma/client';
+import { OrderStatus } from '@prisma/client';
 import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
 import { logError } from '../../logs/route';
 import { getOrdersByDateRange } from './metrics/route';
+import prisma from '@/lib/prisma';
 
-const prisma = new PrismaClient();
 export async function getChartAnalytics(): Promise<
   {
     month: string;
