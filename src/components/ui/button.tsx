@@ -55,6 +55,8 @@ function Button({
         'cursor-pointer'
       )}
       {...props}
+      aria-label={String(props.value)}
+      title={String(props.value ?? '')}
     />
   );
 }

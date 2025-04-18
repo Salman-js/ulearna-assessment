@@ -22,6 +22,7 @@ export default function ProductImage({
               alt={alt ?? ''}
               width={400}
               height={800}
+              priority
               className='w-full size-full object-cover'
             />
           </Lens>

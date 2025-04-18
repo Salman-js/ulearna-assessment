@@ -1,36 +1,120 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ulearna Store
 
-## Getting Started
+Built with Next.js, TailwindCSS & Prisma
 
-First, run the development server:
+## Project Setup
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- Docker and Docker Compose
+- PostgreSQL
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone [repository-url]
+cd ulearna-assessment
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Set up environment variables:
+
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+4. Start the PostgreSQL database:
+
+```bash
+docker-compose up -d
+```
+
+5. Run database migrations:
+
+```bash
+npx prisma migrate dev
+```
+
+## Key Technical Decisions
+
+### Frontend Architecture
+
+- **Next.js 15**: For server-side rendering and optimal performance
+- **React 19**: Latest version for enhanced features and performance
+- **TypeScript**: For type safety and better developer experience
+- **Tailwind CSS**: For utility-first styling and rapid development
+- **Radix UI**: For accessible and customizable UI components
+- **React Query**: For efficient data fetching and caching
+- **React Hook Form**: For form handling with validation
+- **Zod**: For runtime type checking and validation
+
+### Backend Architecture
+
+- **Prisma**: Modern ORM for type-safe database operations
+- **PostgreSQL**: Robust relational database
+- **Docker**: Containerization for consistent development environment
+
+### Testing
+
+- **Jest**: For unit and integration testing
+- **React Testing Library**: For component testing
+
+## How to Run the Project
+
+### Development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This will start the development server with Turbopack for faster builds.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+### Docker Deployment
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+docker-compose up -d
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Unit Tests for Critical Components
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The project includes comprehensive testing for critical components. To run tests:
 
-## Deploy on Vercel
+```bash
+# Run all tests
+npm test
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Run tests in watch mode
+npm run test:watch
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Test Coverage
+
+- Component rendering and interactions
+- Form validations
+- API integrations
+- Database operations
+- State management
+
+### Testing Best Practices
+
+1. Write tests before implementing features (TDD)
+2. Focus on testing component behavior rather than implementation details
+3. Use mock data for API calls
+4. Test edge cases and error scenarios
+5. Maintain high test coverage for critical paths
