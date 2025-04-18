@@ -59,11 +59,13 @@ npx prisma migrate dev
 - **React Hook Form**: For form handling with validation
 - **Zod**: For runtime type checking and validation
 
-### Backend Architecture
+### Database Architecture
 
-- **Prisma**: Modern ORM for type-safe database operations to simulate real life data, and real backend server
-- **PostgreSQL**: Robust relational database
-- **Docker**: Containerization for consistent development environment
+- **Neon**: A serverless postgres cloud database, integrated through Prisma ORM
+
+### Logging
+
+- **Sentry**: An open-source tool used to track, manage, and correct errors in applications
 
 ### Testing
 
@@ -121,4 +123,4 @@ docker-compose up -d
 
 - **Theme Support**: Dark/light mode with system preference detection
 - **Analytics**: Data visualization with real-time data
-- **Error Logging**: Comprehensive error logging system for debugging and monitoring
+- **Error Logging**: Comprehensive error logging system for debugging and monitoring. Powered by Sentry
