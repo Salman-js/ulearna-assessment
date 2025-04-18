@@ -1,9 +1,7 @@
 import { SectionCards } from '@/components/section-cards';
-import { getOrders } from './api/orders/route';
 import TableContainer from '@/features/order/components/table-container';
-import { getChartAnalytics } from './api/orders/analytics/route';
 import AnalyticsChart from '@/features/analytics/components/analytics-chart';
-import { getMetrics } from './api/orders/analytics/metrics/route';
+import { getChartAnalytics, getMetrics, getOrders } from '@/api/orders.api';
 
 export default async function Page() {
   const initialData = await getOrders({

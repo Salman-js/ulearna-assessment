@@ -46,7 +46,7 @@ export async function seed() {
     const variants = await prisma.productVariant.findMany();
 
     const startDate = dayjs().subtract(3, 'month').startOf('week');
-    const weeks = 96;
+    const weeks = 12;
 
     // Generate orders for each variant
     const ordersData: Prisma.OrderCreateArgs['data'][] = [];

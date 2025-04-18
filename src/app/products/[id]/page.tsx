@@ -1,7 +1,7 @@
+import { getProductById } from '@/api/products.api';
 import { BreadCrumbView } from '@/components/breadcrumb-view';
 import { Separator } from '@/components/ui/separator';
 import ProductOverview from '@/features/product/components/product-overview';
-import { getProductById } from '@/app/api/products/[id]/route';
 
 export default async function Page({
   params,

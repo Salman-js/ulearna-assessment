@@ -8,7 +8,6 @@ import {
 import { OrderStatus, Prisma } from '@prisma/client';
 import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
-import { logError } from '../logs/route';
 import prisma from '@/lib/prisma';
 
 const getDateRange = (
@@ -33,7 +32,7 @@ const getDateRange = (
 
   return { startDate, endDate };
 };
-export async function getOrders({
+async function getOrders({
   period,
   size,
   page,
@@ -104,17 +103,12 @@ export async function getOrders({
     return orders;
   } catch (error) {
     console.error('Error fetching products:', error);
-    await logError({
-      stack: 'Products',
-      error: 'Error fetching orders: ' + error,
-      timestamp: new Date().toISOString(),
-    });
     throw error;
   } finally {
     await prisma.$disconnect();
   }
 }
-export async function createOrder(items: NewProductVariantOrder[]) {
+async function createOrder(items: NewProductVariantOrder[]) {
   try {
     const order = await prisma.order.create({
       data: {
@@ -139,11 +133,6 @@ export async function createOrder(items: NewProductVariantOrder[]) {
     return order;
   } catch (error) {
     console.error('Error creating order:', error);
-    await logError({
-      stack: 'Order',
-      error: 'Error creating order: ' + error,
-      timestamp: new Date().toISOString(),
-    });
     throw error;
   } finally {
     await prisma.$disconnect();

@@ -1,9 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import React from 'react';
 
-type loadingProps = {};
-
-const Loading: React.FC<loadingProps> = () => {
+const Loading: React.FC = () => {
   return (
     <main aria-label='loading-nav' className='flex flex-1 flex-col'>
       <div className='@container/main flex flex-1 flex-col gap-2'>

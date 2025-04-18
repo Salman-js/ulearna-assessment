@@ -1,13 +1,54 @@
 'use server';
 
-import { OrderStatus } from '@prisma/client';
+import { OrderStatus, Prisma } from '@prisma/client';
 import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
-import { logError } from '../../logs/route';
-import { getOrdersByDateRange } from './metrics/route';
 import prisma from '@/lib/prisma';
 
-export async function getChartAnalytics(): Promise<
+async function getOrdersByDateRange({
+  startDate,
+  endDate,
+  filter,
+}: {
+  startDate: Date;
+  endDate: Date;
+  filter?: Prisma.OrderWhereInput;
+}) {
+  try {
+    const dateRange = {
+      gte: dayjs(startDate).startOf('day').toDate(),
+      lte: dayjs(endDate).endOf('day').toDate(),
+    };
+    const where: Prisma.OrderWhereInput = {
+      ...filter,
+      orderDate: dateRange,
+    };
+    const orders = await prisma.order.findMany({
+      where,
+      orderBy: {
+        orderDate: 'desc',
+      },
+      include: {
+        products: {
+          include: {
+            product: {
+              include: {
+                product: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return orders;
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+async function getChartAnalytics(): Promise<
   {
     month: string;
     Pending: number;
@@ -68,11 +109,6 @@ export async function getChartAnalytics(): Promise<
     return ordersByMonth;
   } catch (error) {
     console.error('Error fetching products:', error);
-    await logError({
-      stack: 'Analytics',
-      error: 'Error fetching chart analytics: ' + error,
-      timestamp: new Date().toISOString(),
-    });
     throw error;
   } finally {
     await prisma.$disconnect();

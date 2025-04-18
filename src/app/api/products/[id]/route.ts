@@ -1,13 +1,8 @@
-'use server';
-
 import { Prisma } from '@prisma/client';
 import { NextResponse } from 'next/server';
-import { logError } from '../../logs/route';
 import prisma from '@/lib/prisma';
 
-export async function getProductById(
-  id: string
-): Promise<Prisma.ProductGetPayload<{
+async function getProductById(id: string): Promise<Prisma.ProductGetPayload<{
   include: { defaultVariant: true; variants: true };
 }> | null> {
   try {
@@ -23,25 +18,26 @@ export async function getProductById(
     return product;
   } catch (error) {
     console.error('Error fetching product:', error);
-    await logError({
-      stack: 'Product',
-      error: 'Error fetching product : ' + id + ' ' + error,
-      timestamp: new Date().toISOString(),
-    });
     throw error;
   } finally {
     await prisma.$disconnect();
   }
 }
 
-// Client-side fetch route
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const products = await getProductById(params.id);
-    return NextResponse.json(products);
+    const { id } = context.params;
+    if (!id) {
+      return NextResponse.json({ error: 'Invalid ID' }, { status: 404 });
+    }
+    const product = await getProductById(id);
+    if (!product) {
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+    }
+    return NextResponse.json(product);
   } catch (error) {
     console.error('Error fetching product:', error);
     return NextResponse.json(

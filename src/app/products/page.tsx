@@ -1,7 +1,7 @@
 import { Separator } from '@/components/ui/separator';
 import ProductsGrid from '@/features/product/components/products-grid';
 import { ProductBreadCrumbs } from '@/features/product/components/product-breadcrumbs';
-import { getProducts } from '../api/products/route';
+import { getProducts } from '@/api/products.api';
 
 export default async function Page() {
   const initialData = await getProducts();

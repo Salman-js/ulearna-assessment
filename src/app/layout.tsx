@@ -4,7 +4,6 @@ import './globals.css';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
 import { SiteHeader } from '@/components/site-header';
-import { ThemeProvider } from '@/components/theme-provider';
 import Providers from './providers';
 import { Toaster } from '@/components/ui/sonner';
 const geistSans = Geist({
@@ -32,25 +31,23 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
-          <Providers>
-            <SidebarProvider
-              style={
-                {
-                  '--sidebar-width': 'calc(var(--spacing) * 72)',
-                  '--header-height': 'calc(var(--spacing) * 12)',
-                } as React.CSSProperties
-              }
-            >
-              <AppSidebar variant='inset' />
-              <SidebarInset>
-                <SiteHeader />
-                {children}
-              </SidebarInset>
-            </SidebarProvider>
-          </Providers>
-          <Toaster />
-        </ThemeProvider>
+        <Providers>
+          <SidebarProvider
+            style={
+              {
+                '--sidebar-width': 'calc(var(--spacing) * 72)',
+                '--header-height': 'calc(var(--spacing) * 12)',
+              } as React.CSSProperties
+            }
+          >
+            <AppSidebar variant='inset' />
+            <SidebarInset>
+              <SiteHeader />
+              {children}
+            </SidebarInset>
+          </SidebarProvider>
+        </Providers>
+        <Toaster />
       </body>
     </html>
   );
