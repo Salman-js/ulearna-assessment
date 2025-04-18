@@ -40,6 +40,7 @@ import {
   Table as TableType,
   flexRender,
 } from '@tanstack/react-table';
+import { motion } from 'framer-motion';
 
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Badge } from '@/components/ui/badge';
@@ -83,6 +84,9 @@ import { OrderStatus, Prisma } from '@prisma/client';
 import { ITableOrder } from '@/features/order/interface/interface.order';
 import dayjs from 'dayjs';
 import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
+import { AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { Dot } from 'lucide-react';
 
 // Create a separate component for the drag handle
 function DragHandle({ id }: { id: string }) {
@@ -503,54 +507,66 @@ function TableCellViewer({ item }: { item: ITableOrder }) {
           <DrawerTitle>Order details</DrawerTitle>
           <DrawerDescription>Items included in this order</DrawerDescription>
         </DrawerHeader>
-        <div className='flex flex-col gap-4 overflow-y-auto px-4 text-sm'>
-          {!isMobile && (
-            <>
-              <Separator />
-              <div className='grid gap-2'>
-                <div className='flex gap-2 leading-none font-medium'>
-                  Trending up by 5.2% this month{' '}
-                  <IconTrendingUp className='size-4' />
+        <Separator />
+        <div className='flex flex-col gap-4 overflow-y-auto px-4 text-sm mt-4'>
+          <AnimatePresence initial={false} mode='popLayout'>
+            {item.products.map((item) => (
+              <motion.div
+                key={item.id}
+                layout
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  layout: { duration: 0.2 },
+                }}
+                className={cn(
+                  'flex items-center gap-3',
+                  'p-2 rounded-lg',
+                  'bg-zinc-50 dark:bg-zinc-800/50',
+                  'mb-3'
+                )}
+              >
+                <div className='flex-1 min-w-0'>
+                  <div className='flex items-center justify-between'>
+                    <div className='flex flex-row items-center gap-2'>
+                      <span className='text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate'>
+                        {item.product?.product?.name}
+                      </span>
+                      <Dot />
+                      <span className='text-sm font-light text-zinc-800 dark:text-zinc-200 truncate'>
+                        {item.product?.color}
+                      </span>
+                      <Dot />
+                      <span className='text-sm font-lighter text-zinc-800 dark:text-zinc-200 truncate'>
+                        {item.product?.size}
+                      </span>
+                    </div>
+                  </div>
+                  <div className='flex items-center justify-between mt-1'>
+                    <div className='flex items-center gap-1'>
+                      <motion.span
+                        layout
+                        className='text-xs text-zinc-600 dark:text-zinc-400 w-4 text-center'
+                      >
+                        {item.quantity}
+                      </motion.span>
+                    </div>
+                    <motion.span
+                      layout
+                      className='text-xs text-zinc-500 dark:text-zinc-400'
+                    >
+                      $
+                      {(
+                        Number(item.product?.price || 0) * item.quantity
+                      ).toFixed(2)}
+                    </motion.span>
+                  </div>
                 </div>
-                <div className='text-muted-foreground'>
-                  Showing total visitors for the last 6 months. This is just
-                  some random text to test the layout. It spans multiple lines
-                  and should wrap around.
-                </div>
-              </div>
-              <Separator />
-            </>
-          )}
-          {/* <form className='flex flex-col gap-4'>
-            <div className='grid grid-cols-2 gap-4'>
-              <div className='flex flex-col gap-3'>
-                <Label htmlFor='type'>Type</Label>
-                <Select defaultValue={item.type}>
-                  <SelectTrigger id='type' className='w-full'>
-                    <SelectValue placeholder='Select a type' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value='Table of Contents'>
-                      Table of Contents
-                    </SelectItem>
-                    <SelectItem value='Executive Summary'>
-                      Executive Summary
-                    </SelectItem>
-                    <SelectItem value='Technical Approach'>
-                      Technical Approach
-                    </SelectItem>
-                    <SelectItem value='Design'>Design</SelectItem>
-                    <SelectItem value='Capabilities'>Capabilities</SelectItem>
-                    <SelectItem value='Focus Documents'>
-                      Focus Documents
-                    </SelectItem>
-                    <SelectItem value='Narrative'>Narrative</SelectItem>
-                    <SelectItem value='Cover Page'>Cover Page</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </form> */}
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
         {/* <DrawerFooter>
           <Button>Submit</Button>

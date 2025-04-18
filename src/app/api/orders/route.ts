@@ -68,6 +68,15 @@ export async function getOrders({
         gte: dateRange.startDate,
         lte: dateRange.endDate,
       },
+      products: {
+        some: {
+          product: {
+            product: {
+              isNot: null,
+            },
+          },
+        },
+      },
     };
     const orders = await prisma.order.findMany({
       skip,
@@ -75,6 +84,13 @@ export async function getOrders({
       where,
       include: {
         products: {
+          where: {
+            product: {
+              product: {
+                isNot: null,
+              },
+            },
+          },
           include: {
             product: {
               include: {
