@@ -7,7 +7,6 @@ import { SiteHeader } from '@/components/site-header';
 import { ThemeProvider } from '@/components/theme-provider';
 import Providers from './providers';
 import { Toaster } from '@/components/ui/sonner';
-
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
