@@ -13,7 +13,7 @@ const LoadingLayout = () => {
       <Separator className='bg-accent' />
       <div className='w-full lg:w-4/5 grid grid-cols-1 lg:grid-cols-2 md:grid-cols-2 mt-4 gap-3'>
         <div className='w-full flex flex-col gap-2'>
-          <Skeleton className='w-full h-96 rounded-xl bg-secondary' />
+          <Skeleton className='w-full h-[40em] rounded-xl bg-secondary' />
           <div className='w-full flex flex-row justify-center gap-3'>
             {Array.from({ length: 4 }).map((_, index) => (
               <Skeleton
