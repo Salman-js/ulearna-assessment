@@ -20,7 +20,7 @@ import {
 } from '@tanstack/react-table';
 import { OrderStatus } from '@prisma/client';
 import { useFetchOrders } from '../api/api.orders';
-
+import TableWrapper from './table-wrapper';
 
 const TableContainer: React.FC = () => {
   const [pagination, setPagination] = useState({
@@ -37,7 +37,7 @@ const TableContainer: React.FC = () => {
     period: 'one-month',
     size: pagination.pageSize,
   });
-  const { data, refetch } = useFetchOrders(queryParams);
+  const { data, isLoading } = useFetchOrders(queryParams);
   const tableData: ITableOrder[] = data ?? [];
 
   const table = useReactTable({
@@ -64,16 +64,15 @@ const TableContainer: React.FC = () => {
       status: value,
     }));
   };
-  useEffect(() => {
-    refetch();
-  }, [queryParams, pagination]);
   return (
-    <DataTable
-      data={data ?? []}
-      table={table}
-      onStatusChange={handleStatusChange}
-      status={queryParams.status}
-    />
+    <TableWrapper isLoading={isLoading}>
+      <DataTable
+        data={data ?? []}
+        table={table}
+        onStatusChange={handleStatusChange}
+        status={queryParams.status}
+      />
+    </TableWrapper>
   );
 };
 export default TableContainer;
