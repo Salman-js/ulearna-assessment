@@ -9,6 +9,7 @@ import { OrderStatus, Prisma } from '@prisma/client';
 import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import Sentry from '@/lib/sentry';
 
 const getDateRange = (
   period: AnalyticsPeriod
@@ -103,6 +104,7 @@ async function getOrders({
     return orders;
   } catch (error) {
     console.error('Error fetching products:', error);
+    Sentry.captureException(error);
     throw error;
   } finally {
     await prisma.$disconnect();
@@ -133,6 +135,7 @@ async function createOrder(items: NewProductVariantOrder[]) {
     return order;
   } catch (error) {
     console.error('Error creating order:', error);
+    Sentry.captureException(error);
     throw error;
   } finally {
     await prisma.$disconnect();

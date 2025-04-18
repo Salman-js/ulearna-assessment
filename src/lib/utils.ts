@@ -26,9 +26,5 @@ export function roundNumber(num: number): number {
   return Math.round(num * 100) / 100;
 }
 export function getRandomNumber(min: number, max: number) {
-  if (min > max) {
-    [min, max] = [max, min];
-  }
-
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }

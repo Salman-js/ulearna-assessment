@@ -2,6 +2,7 @@
 
 import { IMetrics } from '@/features/order/interface/interface.order';
 import prisma from '@/lib/prisma';
+import Sentry from '@/lib/sentry';
 import { OrderStatus, Prisma } from '@prisma/client';
 import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
@@ -44,6 +45,7 @@ async function getOrdersByDateRange({
     return orders;
   } catch (error) {
     console.error('Error fetching products:', error);
+    Sentry.captureException(error);
     throw error;
   } finally {
     await prisma.$disconnect();
@@ -202,6 +204,7 @@ async function getMetrics(): Promise<IMetrics> {
     return data;
   } catch (error) {
     console.error('Error fetching products:', error);
+    Sentry.captureException(error);
     throw error;
   } finally {
     await prisma.$disconnect();

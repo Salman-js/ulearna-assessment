@@ -28,17 +28,15 @@ type TableContainerProps = {
 const TableContainer: React.FC<TableContainerProps> = ({
   orders: initialData,
 }) => {
-  const [pagination, setPagination] = React.useState({
+  const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 20,
   });
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
   const [queryParams, setQueryParams] = useState<OrderTableQuery>({
     page: pagination.pageIndex + 1,
     period: 'one-month',

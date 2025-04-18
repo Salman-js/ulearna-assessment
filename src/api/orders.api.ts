@@ -3,6 +3,7 @@ import {
   IMetrics,
 } from '@/features/order/interface/interface.order';
 import prisma from '@/lib/prisma';
+import Sentry from '@/lib/sentry';
 import { OrderStatus, Prisma } from '@prisma/client';
 import dayjs from 'dayjs';
 
@@ -77,6 +78,7 @@ export async function getOrders({
     return orders;
   } catch (error) {
     console.error('Error fetching products:', error);
+    Sentry.captureException(error);
     throw error;
   } finally {
     await prisma.$disconnect();
@@ -143,6 +145,7 @@ export async function getOrdersByDateRange({
     return orders;
   } catch (error) {
     console.error('Error fetching products:', error);
+    Sentry.captureException(error);
     throw error;
   } finally {
     await prisma.$disconnect();
@@ -209,6 +212,7 @@ export async function getChartAnalytics(): Promise<
     return ordersByMonth;
   } catch (error) {
     console.error('Error fetching products:', error);
+    Sentry.captureException(error);
     throw error;
   } finally {
     await prisma.$disconnect();
@@ -367,6 +371,7 @@ export async function getMetrics(): Promise<IMetrics> {
     return data;
   } catch (error) {
     console.error('Error fetching products:', error);
+    Sentry.captureException(error);
     throw error;
   } finally {
     await prisma.$disconnect();

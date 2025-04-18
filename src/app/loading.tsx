@@ -15,7 +15,7 @@ const Loading: React.FC = () => {
             <Skeleton className='w-full h-72' />
           </div>
           <div className='flex flex-col w-full px-4 gap-2'>
-            {Array.from({ length: 10 }).map((_, i) => (
+            {Array.from({ length: 5 }).map((_, i) => (
               <Skeleton className='w-full h-18' key={i} />
             ))}
           </div>

@@ -4,6 +4,7 @@ import { OrderStatus, Prisma } from '@prisma/client';
 import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import Sentry from '@/lib/sentry';
 
 async function getOrdersByDateRange({
   startDate,
@@ -43,6 +44,7 @@ async function getOrdersByDateRange({
     return orders;
   } catch (error) {
     console.error('Error fetching products:', error);
+    Sentry.captureException(error);
     throw error;
   } finally {
     await prisma.$disconnect();
@@ -109,6 +111,7 @@ async function getChartAnalytics(): Promise<
     return ordersByMonth;
   } catch (error) {
     console.error('Error fetching products:', error);
+    Sentry.captureException(error);
     throw error;
   } finally {
     await prisma.$disconnect();

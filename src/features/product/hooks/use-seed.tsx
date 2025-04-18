@@ -8,13 +8,8 @@ import { useQueryClient } from '@tanstack/react-query';
 export function useSeed() {
   const queryClient = useQueryClient();
   const [isPending, startTransition] = useTransition();
-  const [isChecking, startCheckTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
-  const [checkError, setCheckError] = useState<string | null>(null);
-  const [checkSuccess, setCheckSuccess] = useState<boolean>(false);
-  const [hasData, setHasData] = useState<boolean>(false);
-
   const handleSeed = async () => {
     setError(null);
     setSuccess(false);
@@ -22,7 +17,6 @@ export function useSeed() {
     startTransition(async () => {
       try {
         await seed();
-        setHasData(true);
         setSuccess(true);
       } catch (err) {
         console.log('Error: ', err);
@@ -30,7 +24,7 @@ export function useSeed() {
         setError(err instanceof Error ? err.message : 'Seeding failed');
       } finally {
         toast.success('Data generated successfully!');
-        queryClient.resetQueries();
+        queryClient.clear();
         setTimeout(() => {
           setError(null);
           setSuccess(false);
@@ -46,7 +40,6 @@ export function useSeed() {
     startTransition(async () => {
       try {
         await purge();
-        setHasData(false);
         setSuccess(true);
       } catch (err) {
         console.log('Error: ', err);
@@ -54,30 +47,10 @@ export function useSeed() {
         setError(err instanceof Error ? err.message : 'Seeding failed');
       } finally {
         toast.success('Data reset successfully!');
-        queryClient.resetQueries();
+        queryClient.clear();
         setTimeout(() => {
           setError(null);
           setSuccess(false);
-        }, 5000);
-      }
-    });
-  };
-  const handleCheck = async () => {
-    setCheckError(null);
-    setCheckSuccess(false);
-    startCheckTransition(async () => {
-      try {
-        const dbHasData = await notEmpty();
-        console.log('Has Data: ', dbHasData, hasData);
-        setHasData(dbHasData);
-        setCheckSuccess(true);
-      } catch (err) {
-        console.log('Error: ', err);
-        setError(err instanceof Error ? err.message : 'Checking failed');
-      } finally {
-        setTimeout(() => {
-          setCheckError(null);
-          setCheckSuccess(false);
         }, 5000);
       }
     });
@@ -88,8 +61,5 @@ export function useSeed() {
     purge: handlePurge,
     error,
     success,
-    hasData,
-    isChecking,
-    check: handleCheck,
   };
 }

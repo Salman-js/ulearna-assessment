@@ -16,7 +16,7 @@ export function DatabaseSeedActions() {
   return (
     <Menubar>
       <MenubarMenu>
-        <MenubarTrigger className='space-x-2'>
+        <MenubarTrigger className='space-x-2' disabled={isPending}>
           {isPending ? (
             <Loader2 className='animate-spin mr-2 w-5 h-5' />
           ) : (

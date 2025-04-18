@@ -3,6 +3,7 @@
 import { Prisma } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import Sentry from '@/lib/sentry';
 
 async function getProducts(): Promise<
   Prisma.ProductGetPayload<{
@@ -19,6 +20,7 @@ async function getProducts(): Promise<
     return products;
   } catch (error) {
     console.error('Error fetching products:', error);
+    Sentry.captureException(error);
     throw error;
   } finally {
     await prisma.$disconnect();

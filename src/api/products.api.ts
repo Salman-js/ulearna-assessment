@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import Sentry from '@/lib/sentry';
 import { Prisma } from '@prisma/client';
 
 export async function getProducts(): Promise<
@@ -16,6 +17,7 @@ export async function getProducts(): Promise<
     return products;
   } catch (error) {
     console.error('Error fetching products:', error);
+    Sentry.captureException(error);
     throw error;
   } finally {
     await prisma.$disconnect();
@@ -40,6 +42,7 @@ export async function getProductById(
     return product;
   } catch (error) {
     console.error('Error fetching product:', error);
+    Sentry.captureException(error);
     throw error;
   } finally {
     await prisma.$disconnect();

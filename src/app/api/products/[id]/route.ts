@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import Sentry from '@/lib/sentry';
 
 async function getProductById(id: string): Promise<Prisma.ProductGetPayload<{
   include: { defaultVariant: true; variants: true };
@@ -18,6 +19,7 @@ async function getProductById(id: string): Promise<Prisma.ProductGetPayload<{
     return product;
   } catch (error) {
     console.error('Error fetching product:', error);
+    Sentry.captureException(error);
     throw error;
   } finally {
     await prisma.$disconnect();
@@ -40,6 +42,7 @@ export async function GET(
     return NextResponse.json(product);
   } catch (error) {
     console.error('Error fetching product:', error);
+    Sentry.captureException(error);
     return NextResponse.json(
       { error: 'Failed to fetch product' },
       { status: 500 }
