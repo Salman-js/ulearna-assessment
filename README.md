@@ -1,5 +1,7 @@
 # Ulearna Store
 
+[Live Demo](https://ulearna-assessment-salman.vercel.app/)
+
 Built with Next.js, Framer Motion, TailwindCSS & Prisma
 
 ## Project Setup
