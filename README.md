@@ -53,20 +53,19 @@ npx prisma migrate dev
 - **TypeScript**: For type safety and better developer experience
 - **Tailwind CSS**: For utility-first styling and rapid development
 - **Radix UI**: For accessible and customizable UI components
-- **React Query**: For efficient data fetching and caching
+- **Tanstack Query**: For efficient data fetching, caching loading and error states on the client components
 - **React Hook Form**: For form handling with validation
 - **Zod**: For runtime type checking and validation
 
 ### Backend Architecture
 
-- **Prisma**: Modern ORM for type-safe database operations
+- **Prisma**: Modern ORM for type-safe database operations to simulate real life data, and real backend server
 - **PostgreSQL**: Robust relational database
 - **Docker**: Containerization for consistent development environment
 
 ### Testing
 
-- **Jest**: For unit and integration testing
-- **React Testing Library**: For component testing
+- **Vitest**: For unit and integration testing
 
 ## How to Run the Project
 
