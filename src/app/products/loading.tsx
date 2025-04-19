@@ -7,7 +7,6 @@ const LoadingLayout = () => {
     <div className='@container/main flex flex-col flex-1 p-6 gap-6'>
       <div className='w-full flex flex-row gap-2'>
         <Skeleton className='w-28 h-6' /> <Slash />{' '}
-        <Skeleton className='w-28 h-6' /> <Slash />{' '}
         <Skeleton className='w-28 h-6' />
       </div>
       <Separator className='bg-accent' />

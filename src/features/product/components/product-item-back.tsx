@@ -4,6 +4,8 @@ import { FlipCardBack } from '@/components/ui/flip-card';
 import { MiniSizeToggle } from './mini-size-toggle';
 import MiniAddToCartButton from './mini-add-to-cart';
 import { Separator } from '@/components/ui/separator';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 type productItemProps = {
   product: IProduct;
@@ -18,7 +20,12 @@ const ProductItemBack: React.FC<productItemProps> = ({ product }) => {
       }}
     >
       <div className='w-full h-full flex flex-col items-center justify-center bg-gradient-to-t from-secondary from-5% to-transparent to-95%'>
-        <div className='w-full h-full flex flex-col items-center justify-center rounded-xl text-center gap-2'>
+        <div className='w-full h-full flex flex-col items-center justify-center rounded-xl text-center gap-3'>
+          <Link href={`/products/${product?.id}`}>
+            <Button variant='link' size='lg' className='text-lg'>
+              {product?.name}
+            </Button>
+          </Link>
           <div className='flex flex-row gap-3'>
             <span>SM</span>
             <Separator orientation='vertical' />
