@@ -34,16 +34,16 @@ cp .env.example .env
 # Edit .env with your configuration
 ```
 
-4. Start the PostgreSQL database:
-
-```bash
-docker-compose up -d
-```
-
-5. Run database migrations:
+4. Run database migrations:
 
 ```bash
 npx prisma migrate dev
+```
+
+5. Setup error logging with Sentry
+
+```bash
+npx @sentry/wizard@latest -i nextjs
 ```
 
 ## Key Technical Decisions
