@@ -233,17 +233,19 @@ export function DataTable({
           View
         </Label>
         <Select
-          defaultValue='outline'
+          defaultValue={status ?? 'All'}
           onValueChange={(value) => onStatusChange?.(value as OrderStatus)}
+          value={status ?? 'All'}
         >
           <SelectTrigger
-            className='flex w-fit @4xl/main:hidden'
+            className='flex @4xl/main:hidden'
             size='sm'
             id='view-selector'
           >
             <SelectValue placeholder='Select a status' />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value='All'>All</SelectItem>
             <SelectItem value='Pending'>Pending</SelectItem>
             <SelectItem value='Delivered'>Delivered</SelectItem>
             <SelectItem value='Canceled'>Canceled</SelectItem>
@@ -258,6 +260,7 @@ export function DataTable({
               value === 'All' ? undefined : (value as OrderStatus)
             )
           }
+          className='@sm/main:hidden'
         >
           <ToggleGroupItem value='All' className='px-6'>
             All

@@ -46,10 +46,6 @@ const chartConfig = {
     label: 'Canceled',
     color: 'var(--primary)',
   },
-  All: {
-    label: 'All',
-    color: 'var(--primary)',
-  },
 } satisfies ChartConfig;
 
 export function ChartAreaInteractive({
@@ -96,10 +92,6 @@ export function ChartAreaInteractive({
                 <stop offset='25%' stopColor='#82ca9d' stopOpacity={1.0} />
                 <stop offset='75%' stopColor='#82ca9d' stopOpacity={0.1} />
               </linearGradient>
-              <linearGradient id='fillMobile' x1='0' y1='0' x2='0' y2='1'>
-                <stop offset='25%' stopColor='#82ca9d' stopOpacity={0.8} />
-                <stop offset='75%' stopColor='#82ca9d' stopOpacity={0.1} />
-              </linearGradient>
             </defs>
             <CartesianGrid vertical={false} />
             <XAxis
@@ -130,13 +122,6 @@ export function ChartAreaInteractive({
             />
             <Area
               dataKey='Canceled'
-              type='natural'
-              fill='url(#fillDesktop)'
-              stroke='var(--color-desktop)'
-              stackId='a'
-            />
-            <Area
-              dataKey='All'
               type='natural'
               fill='url(#fillDesktop)'
               stroke='var(--color-desktop)'

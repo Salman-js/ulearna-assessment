@@ -1,6 +1,5 @@
 'use client';
 
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
   isServer,
   QueryClient,
@@ -40,7 +39,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <NextTopLoader color={theme === 'light' ? '#18181b' : '#fafafa'} />
         {children}
-        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ThemeProvider>
   );
