@@ -9,8 +9,6 @@ Built with Next.js, Framer Motion, TailwindCSS & Prisma
 ### Prerequisites
 
 - Node.js (v18 or higher)
-- Docker and Docker Compose
-- PostgreSQL
 
 ### Installation
 
