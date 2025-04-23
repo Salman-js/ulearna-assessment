@@ -65,6 +65,10 @@ npx @sentry/wizard@latest -i nextjs
 
 - **Sentry**: An open-source tool used to track, manage, and correct errors in applications
 
+### Caching
+
+- **Redis**: An in-memory key–value database, used as a distributed cache
+
 ### Testing
 
 - **Vitest**: For unit and integration testing
@@ -107,6 +111,7 @@ docker-compose up -d
 - **Custom State Management**: Built using React Context and useReducer for efficient state handling
 - **Form Validation System**: Real-time validation with immediate user feedback
 - **Error Boundary System**: Custom error handling with recovery options for better user experience
+- **Caching**: Caching query results with Redis to improve page load time
 
 ### Technical Features
 
