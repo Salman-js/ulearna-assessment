@@ -111,8 +111,8 @@ export default function ProductOverview({
               <Image
                 src={`/assets/products/${product?.category}/${selectedVariant?.color}/${vw}.png`}
                 alt={product?.name ?? ''}
-                width={50}
-                height={100}
+                width={756}
+                height={756}
                 className='rounded-sm'
               />
             </div>

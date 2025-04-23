@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import Sentry from '@/lib/sentry';
+import { getRedis } from '@/lib/redis';
 
 const getDateRange = (
   period: AnalyticsPeriod
@@ -61,6 +62,11 @@ async function getOrders({
   try {
     const skip = (page - 1) * size;
     const take = size;
+    const redis = await getRedis();
+    const cachedData = await redis.get(`orders-${period}-${page}-${size}`);
+    if (cachedData) {
+      return JSON.parse(cachedData);
+    }
     const dateRange = getDateRange(period);
     const where: Prisma.OrderWhereInput = {
       status: status ?? undefined,
@@ -101,6 +107,13 @@ async function getOrders({
         },
       },
     });
+    await redis.set(
+      `orders-${period}-${page}-${size}`,
+      JSON.stringify(orders),
+      {
+        EX: 300,
+      }
+    );
     return orders;
   } catch (error) {
     console.error('Error fetching products:', error);

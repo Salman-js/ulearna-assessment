@@ -20,8 +20,8 @@ export default function ProductImage({
             <Image
               src={imageSrc}
               alt={alt ?? ''}
-              width={400}
-              height={800}
+              width={756}
+              height={756}
               priority
               className='w-full size-full object-cover'
             />

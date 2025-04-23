@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import Sentry from '@/lib/sentry';
+import { getRedis } from '@/lib/redis';
 
 async function getOrdersByDateRange({
   startDate,
@@ -60,6 +61,11 @@ async function getChartAnalytics(): Promise<
   }[]
 > {
   try {
+    const redis = await getRedis();
+    const cachedData = await redis.get('analytics');
+    if (cachedData) {
+      return JSON.parse(cachedData);
+    }
     const currentDate = dayjs();
     const currentYear = currentDate.year();
     const months = Array.from({ length: 12 }, (_, i) =>
@@ -107,7 +113,9 @@ async function getChartAnalytics(): Promise<
         };
       })
     );
-
+    await redis.set('analytics', JSON.stringify(ordersByMonth), {
+      EX: 300,
+    });
     return ordersByMonth;
   } catch (error) {
     console.error('Error fetching products:', error);

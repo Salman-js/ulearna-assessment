@@ -4,6 +4,7 @@ import { Prisma } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import Sentry from '@/lib/sentry';
+import { getRedis } from '@/lib/redis';
 
 async function getProducts(): Promise<
   Prisma.ProductGetPayload<{
@@ -11,11 +12,19 @@ async function getProducts(): Promise<
   }>[]
 > {
   try {
+    const redis = await getRedis();
+    const cachedData = await redis.get(`products`);
+    if (cachedData) {
+      return JSON.parse(cachedData);
+    }
     const products = await prisma.product.findMany({
       include: {
         defaultVariant: true,
         variants: true,
       },
+    });
+    await redis.set(`products`, JSON.stringify(products), {
+      EX: 3600 * 24,
     });
     return products;
   } catch (error) {

@@ -6,6 +6,7 @@ import Sentry from '@/lib/sentry';
 import { OrderStatus, Prisma } from '@prisma/client';
 import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
+import { getRedis } from '@/lib/redis';
 
 async function getOrdersByDateRange({
   startDate,
@@ -53,6 +54,11 @@ async function getOrdersByDateRange({
 }
 async function getMetrics(): Promise<IMetrics> {
   try {
+    const redis = await getRedis();
+    const cachedData = await redis.get('metrics');
+    if (cachedData) {
+      return JSON.parse(cachedData);
+    }
     const currentDate = dayjs();
     const thisMonthRange = {
       startDate: dayjs(currentDate).startOf('month').toDate(),
@@ -200,6 +206,9 @@ async function getMetrics(): Promise<IMetrics> {
           100,
       },
     };
+    await redis.set('metrics', JSON.stringify(data), {
+      EX: 300,
+    });
 
     return data;
   } catch (error) {
