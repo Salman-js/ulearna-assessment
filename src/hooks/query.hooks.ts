@@ -16,7 +16,6 @@ export function useFetchQuery<TData = any>(
   queryOptions?: UseQueryOptions<TData>
 ) {
   const queryFn = async (): Promise<TData> => {
-    // Append queryParams to the URL if provided
     let finalUrl = url;
     if (queryParams) {
       const params = new URLSearchParams();

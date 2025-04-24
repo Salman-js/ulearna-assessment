@@ -3,22 +3,11 @@
 import * as React from 'react';
 import {
   IconBuildingStore,
-  IconCamera,
-  IconChartBar,
   IconDashboard,
-  IconFileAi,
-  IconFileDescription,
-  IconFolder,
-  IconHelp,
   IconInnerShadowTop,
-  IconListDetails,
-  IconSearch,
-  IconSettings,
-  IconUsers,
 } from '@tabler/icons-react';
 
 import { NavMain } from '@/components/nav-main';
-import { NavSecondary } from '@/components/nav-secondary';
 import { NavUser } from '@/components/nav-user';
 import {
   Sidebar,
@@ -49,23 +38,6 @@ const data = {
       icon: IconBuildingStore,
     },
   ],
-  navSecondary: [
-    {
-      title: 'Settings',
-      url: '#',
-      icon: IconSettings,
-    },
-    {
-      title: 'Get Help',
-      url: '#',
-      icon: IconHelp,
-    },
-    {
-      title: 'Search',
-      url: '#',
-      icon: IconSearch,
-    },
-  ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -88,7 +60,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        {/* <NavSecondary items={data.navSecondary} className='mt-auto' /> */}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

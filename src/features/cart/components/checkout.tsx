@@ -183,6 +183,7 @@ function Checkout() {
                 onClick={openCart}
                 variant='outline'
                 type='button'
+                disabled={isPending}
               >
                 <X className='w-4 h-4' />
               </Button>

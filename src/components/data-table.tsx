@@ -86,7 +86,8 @@ import dayjs from 'dayjs';
 import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
 import { AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { Dot } from 'lucide-react';
+import { AlertTriangle, Dot, Loader2 } from 'lucide-react';
+import TableWrapper from '@/features/order/components/table-wrapper';
 
 // Create a separate component for the drag handle
 function DragHandle({ id }: { id: string }) {
@@ -193,11 +194,19 @@ export function DataTable({
   table,
   onStatusChange,
   status,
+  isRefetching,
+  isLoading,
+  isError,
+  retry,
 }: {
   data: ITableOrder[];
   table: TableType<ITableOrder>;
   onStatusChange?: (value: OrderStatus | undefined) => void;
   status: OrderStatus | undefined;
+  isRefetching: boolean;
+  isLoading: boolean;
+  isError: boolean;
+  retry: () => void;
 }) {
   const [data, setData] = React.useState(() => initialData);
   const sortableId = React.useId();
@@ -229,52 +238,55 @@ export function DataTable({
       className='w-full flex-col justify-start gap-6'
     >
       <div className='flex items-center justify-between px-4 lg:px-6'>
-        <Label htmlFor='view-selector' className='sr-only'>
-          View
-        </Label>
-        <Select
-          defaultValue={status ?? 'All'}
-          onValueChange={(value) => onStatusChange?.(value as OrderStatus)}
-          value={status ?? 'All'}
-        >
-          <SelectTrigger
-            className='flex @4xl/main:hidden'
-            size='sm'
-            id='view-selector'
+        <div className='flex flex-row gap-3 items-center'>
+          <Label htmlFor='view-selector' className='sr-only'>
+            View
+          </Label>
+          <Select
+            defaultValue={status ?? 'All'}
+            onValueChange={(value) => onStatusChange?.(value as OrderStatus)}
+            value={status ?? 'All'}
           >
-            <SelectValue placeholder='Select a status' />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value='All'>All</SelectItem>
-            <SelectItem value='Pending'>Pending</SelectItem>
-            <SelectItem value='Delivered'>Delivered</SelectItem>
-            <SelectItem value='Canceled'>Canceled</SelectItem>
-          </SelectContent>
-        </Select>
-        <ToggleGroup
-          type='single'
-          variant='outline'
-          value={status ?? 'All'}
-          onValueChange={(value) =>
-            onStatusChange?.(
-              value === 'All' ? undefined : (value as OrderStatus)
-            )
-          }
-          className='@sm/main:hidden'
-        >
-          <ToggleGroupItem value='All' className='px-6'>
-            All
-          </ToggleGroupItem>
-          <ToggleGroupItem value='Pending' className='px-6'>
-            Pending
-          </ToggleGroupItem>
-          <ToggleGroupItem value='Delivered' className='px-6'>
-            Delivered
-          </ToggleGroupItem>
-          <ToggleGroupItem value='Canceled' className='px-6'>
-            Canceled
-          </ToggleGroupItem>
-        </ToggleGroup>
+            <SelectTrigger
+              className='flex @4xl/main:hidden'
+              size='sm'
+              id='view-selector'
+            >
+              <SelectValue placeholder='Select a status' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='All'>All</SelectItem>
+              <SelectItem value='Pending'>Pending</SelectItem>
+              <SelectItem value='Delivered'>Delivered</SelectItem>
+              <SelectItem value='Canceled'>Canceled</SelectItem>
+            </SelectContent>
+          </Select>
+          <ToggleGroup
+            type='single'
+            variant='outline'
+            value={status ?? 'All'}
+            onValueChange={(value) =>
+              onStatusChange?.(
+                value === 'All' ? undefined : (value as OrderStatus)
+              )
+            }
+            className='hidden md:block'
+          >
+            <ToggleGroupItem value='All' className='px-6'>
+              All
+            </ToggleGroupItem>
+            <ToggleGroupItem value='Pending' className='px-6'>
+              Pending
+            </ToggleGroupItem>
+            <ToggleGroupItem value='Delivered' className='px-6'>
+              Delivered
+            </ToggleGroupItem>
+            <ToggleGroupItem value='Canceled' className='px-6'>
+              Canceled
+            </ToggleGroupItem>
+          </ToggleGroup>
+          {isRefetching && <Loader2 className='w-6 h-6 animate-spin' />}
+        </div>
         <div className='flex items-center gap-2'>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -313,55 +325,67 @@ export function DataTable({
       </div>
       <div className='relative flex flex-col gap-4 overflow-auto px-4 lg:px-6'>
         <div className='overflow-hidden rounded-lg border'>
-          <DndContext
-            collisionDetection={closestCenter}
-            modifiers={[restrictToVerticalAxis]}
-            onDragEnd={handleDragEnd}
-            sensors={sensors}
-            id={sortableId}
-          >
-            <Table>
-              <TableHeader className='bg-muted sticky top-0 z-10'>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      return (
-                        <TableHead key={header.id} colSpan={header.colSpan}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                        </TableHead>
-                      );
-                    })}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody className='**:data-[slot=table-cell]:first:w-8'>
-                {table.getRowModel().rows?.length ? (
-                  <SortableContext
-                    items={dataIds}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    {table.getRowModel().rows.map((row) => (
-                      <DraggableRow key={row.id} row={row} />
-                    ))}
-                  </SortableContext>
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className='h-24 text-center'
+          <TableWrapper isLoading={isLoading}>
+            <DndContext
+              collisionDetection={closestCenter}
+              modifiers={[restrictToVerticalAxis]}
+              onDragEnd={handleDragEnd}
+              sensors={sensors}
+              id={sortableId}
+            >
+              <Table>
+                <TableHeader className='bg-muted sticky top-0 z-10'>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => {
+                        return (
+                          <TableHead key={header.id} colSpan={header.colSpan}>
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                          </TableHead>
+                        );
+                      })}
+                    </TableRow>
+                  ))}
+                </TableHeader>
+                <TableBody className='**:data-[slot=table-cell]:first:w-8'>
+                  {isError ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className='h-24 text-center'
+                      >
+                        <AlertTriangle /> Error fetching data. <br />
+                        <Button onClick={retry}>Try Again</Button>
+                      </TableCell>
+                    </TableRow>
+                  ) : table.getRowModel().rows?.length ? (
+                    <SortableContext
+                      items={dataIds}
+                      strategy={verticalListSortingStrategy}
                     >
-                      No results.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </DndContext>
+                      {table.getRowModel().rows.map((row) => (
+                        <DraggableRow key={row.id} row={row} />
+                      ))}
+                    </SortableContext>
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className='h-24 text-center'
+                      >
+                        No results.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </DndContext>
+          </TableWrapper>
         </div>
         <div className='flex items-center justify-between px-4'>
           <div className='text-muted-foreground hidden flex-1 text-sm lg:flex'>

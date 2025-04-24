@@ -6,41 +6,15 @@ import {
   NewProductVariantOrder,
 } from '@/features/order/interface/interface.order';
 import { OrderStatus, Prisma } from '@prisma/client';
-import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import Sentry from '@/lib/sentry';
-import { getRedis } from '@/lib/redis';
 
-const getDateRange = (
-  period: AnalyticsPeriod
-): { startDate: Date; endDate: Date } => {
-  const endDate = dayjs().endOf('day').toDate();
-  let startDate: Date;
-
-  switch (period) {
-    case 'one-month':
-      startDate = dayjs().subtract(1, 'month').startOf('day').toDate();
-      break;
-    case 'three-months':
-      startDate = dayjs().subtract(3, 'month').startOf('day').toDate();
-      break;
-    case 'one-week':
-      startDate = dayjs().subtract(1, 'week').startOf('day').toDate();
-      break;
-    default:
-      startDate = dayjs().subtract(3, 'month').startOf('day').toDate();
-  }
-
-  return { startDate, endDate };
-};
 async function getOrders({
-  period,
   size,
   page,
   status,
 }: {
-  period: AnalyticsPeriod;
   size: number;
   page: number;
   status?: OrderStatus;
@@ -62,18 +36,8 @@ async function getOrders({
   try {
     const skip = (page - 1) * size;
     const take = size;
-    const redis = await getRedis();
-    const cachedData = await redis.get(`orders-${period}-${page}-${size}`);
-    if (cachedData) {
-      return JSON.parse(cachedData);
-    }
-    const dateRange = getDateRange(period);
     const where: Prisma.OrderWhereInput = {
       status: status ?? undefined,
-      orderDate: {
-        gte: dateRange.startDate,
-        lte: dateRange.endDate,
-      },
       products: {
         some: {
           product: {
@@ -107,13 +71,6 @@ async function getOrders({
         },
       },
     });
-    await redis.set(
-      `orders-${period}-${page}-${size}`,
-      JSON.stringify(orders),
-      {
-        EX: 300,
-      }
-    );
     return orders;
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -144,7 +101,6 @@ async function createOrder(items: NewProductVariantOrder[]) {
         },
       },
     });
-
     return order;
   } catch (error) {
     console.error('Error creating order:', error);
@@ -157,15 +113,11 @@ async function createOrder(items: NewProductVariantOrder[]) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const period =
-      (searchParams.get('period') as AnalyticsPeriod | undefined) ??
-      'three-months';
     const size = Number(searchParams.get('size') || 20);
     const page = Number(searchParams.get('page') || 1);
     const status = searchParams.get('status') as OrderStatus | undefined;
 
     const orders = await getOrders({
-      period,
       size,
       page,
       status,

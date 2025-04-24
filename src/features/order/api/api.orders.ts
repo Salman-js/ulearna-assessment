@@ -11,12 +11,20 @@ import {
   OrderTableQuery,
 } from '@/features/order/interface/interface.order';
 import { useFetchQuery, useMutate } from '@/hooks/query.hooks';
+import { OrderStatus } from '@prisma/client';
 import { useQueryClient } from '@tanstack/react-query';
 
 export function useFetchOrders(params: OrderTableQuery) {
   return useFetchQuery<ITableOrder[]>(
     '/api/orders',
     ['orders', params],
+    params
+  );
+}
+export function useFetchOrdersCount(params: { status?: OrderStatus }) {
+  return useFetchQuery<number>(
+    '/api/orders/count',
+    ['orders-count', params],
     params
   );
 }

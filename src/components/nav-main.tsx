@@ -1,6 +1,6 @@
 'use client';
 
-import { IconPlus, type Icon } from '@tabler/icons-react';
+import { type Icon } from '@tabler/icons-react';
 
 import {
   SidebarGroup,
@@ -10,8 +10,8 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { AnimatedLink } from './ui/AnimatedLink';
 
 export function NavMain({
   items,
@@ -27,22 +27,10 @@ export function NavMain({
     <SidebarGroup>
       <SidebarGroupContent className='flex flex-col gap-2'>
         <SidebarSeparator />
-        {/* <SidebarMenu>
-          <SidebarMenuItem className='flex items-center gap-2'>
-            <SidebarMenuButton
-              tooltip='New Product'
-              className='rounded-md shadow-md p-3'
-            >
-              <IconPlus stroke={2} />
-              <span className='font-semibold'>New Product</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu> */}
-        {/* <SidebarSeparator /> */}
         <SidebarMenu>
           {items.map((item) => (
-            <Link href={item.url} key={item.title}>
-              <SidebarMenuItem>
+            <li key={item.title}>
+              <AnimatedLink href={item.url} key={item.title}>
                 <SidebarMenuButton
                   tooltip={item.title}
                   isActive={
@@ -54,8 +42,8 @@ export function NavMain({
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                 </SidebarMenuButton>
-              </SidebarMenuItem>
-            </Link>
+              </AnimatedLink>
+            </li>
           ))}
         </SidebarMenu>
       </SidebarGroupContent>

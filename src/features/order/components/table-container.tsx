@@ -19,7 +19,7 @@ import {
   VisibilityState,
 } from '@tanstack/react-table';
 import { OrderStatus } from '@prisma/client';
-import { useFetchOrders } from '../api/api.orders';
+import { useFetchOrders, useFetchOrdersCount } from '../api/api.orders';
 import TableWrapper from './table-wrapper';
 
 const TableContainer: React.FC = () => {
@@ -34,10 +34,13 @@ const TableContainer: React.FC = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [queryParams, setQueryParams] = useState<OrderTableQuery>({
     page: pagination.pageIndex + 1,
-    period: 'one-month',
     size: pagination.pageSize,
   });
-  const { data, isLoading } = useFetchOrders(queryParams);
+  const { data, isLoading, isRefetching, isError, refetch } =
+    useFetchOrders(queryParams);
+  const { data: totalCount } = useFetchOrdersCount({
+    status: queryParams.status,
+  });
   const tableData: ITableOrder[] = data ?? [];
 
   const table = useReactTable({
@@ -57,6 +60,8 @@ const TableContainer: React.FC = () => {
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    manualPagination: true,
+    rowCount: totalCount ?? 0,
   });
   const handleStatusChange = (value: OrderStatus | undefined) => {
     setQueryParams((prev) => ({
@@ -65,14 +70,16 @@ const TableContainer: React.FC = () => {
     }));
   };
   return (
-    <TableWrapper isLoading={isLoading}>
-      <DataTable
-        data={data ?? []}
-        table={table}
-        onStatusChange={handleStatusChange}
-        status={queryParams.status}
-      />
-    </TableWrapper>
+    <DataTable
+      data={data ?? []}
+      table={table}
+      onStatusChange={handleStatusChange}
+      status={queryParams.status}
+      isRefetching={isRefetching}
+      isLoading={isLoading}
+      isError={isError || (!isLoading && !data)}
+      retry={refetch}
+    />
   );
 };
 export default TableContainer;

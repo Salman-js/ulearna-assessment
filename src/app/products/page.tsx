@@ -6,7 +6,7 @@ import { getProducts } from '@/api/products.api';
 export default async function Page() {
   const initialData = await getProducts();
   return (
-    <div className='@container/main flex flex-col flex-1 p-6 gap-6'>
+    <div className='@container/main main-container flex flex-col flex-1 p-6 gap-6'>
       <div className='w-full'>
         <ProductBreadCrumbs />
       </div>

@@ -4,7 +4,6 @@ import { Prisma } from '@prisma/client';
 
 export type AnalyticsPeriod = 'three-months' | 'one-month' | 'one-week';
 export type OrderTableQuery = {
-  period: AnalyticsPeriod;
   size: number;
   page: number;
   status?: OrderStatus;

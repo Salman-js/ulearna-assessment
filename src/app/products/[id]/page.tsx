@@ -15,7 +15,7 @@ export default async function Page({
     return <NotFound />;
   }
   return (
-    <div className='@container/main flex flex-col flex-1 p-6 gap-6'>
+    <div className='@container/main main-container flex flex-col flex-1 p-6 gap-6'>
       <div className='w-full'>
         <BreadCrumbView
           items={[

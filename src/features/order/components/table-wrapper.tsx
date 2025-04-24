@@ -10,7 +10,7 @@ const TableWrapper: React.FC<tableWrapperProps> = ({ children, isLoading }) => {
       {isLoading ? (
         <div className='flex flex-col w-full px-4 gap-2'>
           {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton className='w-full h-18' key={i} />
+            <Skeleton className='w-full h-10' key={i} />
           ))}
         </div>
       ) : (
