@@ -1,5 +1,3 @@
-'use server';
-
 import { OrderStatus, Prisma } from '@prisma/client';
 import dayjs from 'dayjs';
 import { NextResponse } from 'next/server';

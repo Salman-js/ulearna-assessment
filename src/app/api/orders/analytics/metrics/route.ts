@@ -1,5 +1,3 @@
-'use server';
-
 import { IMetrics } from '@/features/order/interface/interface.order';
 import prisma from '@/lib/prisma';
 import Sentry from '@/lib/sentry';

@@ -1,7 +1,4 @@
-'use server';
-
 import {
-  AnalyticsPeriod,
   INewOrder,
   NewProductVariantOrder,
 } from '@/features/order/interface/interface.order';
