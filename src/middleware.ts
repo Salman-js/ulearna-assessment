@@ -4,7 +4,7 @@ import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 
 // Explicitly declare Edge runtime
-export const runtime = 'edge';
+export const runtime = 'experimental-edge';
 
 // Create a new ratelimiter, that allows 10 requests per 10 seconds
 const ratelimit = new Ratelimit({
